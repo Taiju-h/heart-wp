@@ -1,0 +1,8 @@
+id,name,jname,value
+7
+1##SEP##overwrite##SEP##上書き保存##SEP##1
+2##SEP##recent_page##SEP##最新のページ表示件数##SEP##7
+3##SEP##recent_file##SEP##最新のファイル表示件数##SEP##10
+4##SEP##list_num##SEP##一覧表示の個数##SEP##8
+5##SEP##list_cols##SEP##一覧表示の列数##SEP##2
+6##SEP##apikey##SEP##APIキー##SEP##o8Kj6HLEmCz6zr0zSNb3zBjLYRBOv3Gj9Hv9pl4L.1779683599

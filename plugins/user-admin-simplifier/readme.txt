@@ -1,0 +1,279 @@
+=== User Admin Simplifier ===
+Contributors: adamsilverstein
+Donate link:
+Tags: admin simplify menus submenus
+Requires at least: 3.0.1
+Tested up to: 6.9
+Stable tag: 3.1.0
+License: GPLv2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+
+Lets any Administrator simplify the WordPress Admin interface, on a per-user basis, by turning specific menu/submenu sections off.
+
+== Description ==
+
+Lets any Administrator simplify the WordPress Admin interface, on a per-user basis. Hide any specific menu or submenu (including in the admin bar) or hide the admin bar entirely.
+
+= Menu control modes =
+
+User Admin Simplifier offers three menu control modes:
+
+* **Per-user only** - the default mode. Configure menu, submenu, and admin bar visibility for each individual user. This is the original behavior and is unchanged.
+* **Role-based only** - configure menu, submenu, and admin bar visibility (and menu order) once per WordPress role. Every user inherits the settings for their role. Users with multiple roles get the union of all their roles' settings for visibility, while menu order comes from the primary role only.
+* **Role-based with per-user overrides** - applies the role defaults, but lets you override each menu item per user with an Inherit / Show / Hide control.
+
+Existing per-user configurations are preserved. Existing installs see no change unless an Administrator switches modes. Regardless of mode, the User Admin Simplifier settings page (under Tools) always remains accessible to Administrators, so you can never lock yourself out.
+
+== Installation ==
+
+Install User Admin Simplifier either via the WordPress.org plugin directory, or by uploading the files to your server
+That’s it. You’re ready to go! To edit your users menus, go to Tools->User Admin Simplifier
+
+Submenus are now available for disabling.  Note that disabling a top level menu removes it, no submenu items will be available. On the other hand, disabling all submenu items does not disable the top level menu.
+
+Unininstalling and deleting the plugin will remove all of its settings.
+
+== Development ==
+
+= Requirements =
+
+* PHP 7.4 or higher
+* Composer (for managing PHP dependencies)
+* Node.js and npm (for building JavaScript assets)
+
+= Setup =
+
+1. Clone the repository
+2. Run `composer install` to install PHP dependencies
+3. Run `npm install` to install JavaScript dependencies
+4. Run `npm run build` to build the React application
+
+= Code Quality =
+
+This plugin uses PHPStan for static analysis to ensure code quality and type safety.
+
+To run PHPStan:
+
+`composer install` (first time only)
+`npm run phpstan`
+
+Or directly with PHP:
+
+`php vendor/bin/phpstan analyse`
+
+The project is configured to run PHPStan at level 3 for improved reliability and maintainability.
+
+= Testing =
+
+The plugin includes PHP unit tests, end-to-end (E2E) tests, and visual regression tests.
+
+**PHP Unit Tests**
+
+Run PHP unit tests:
+
+`npm run test:php`
+
+**End-to-End Tests**
+
+E2E tests use Playwright to test the plugin in a real WordPress environment.
+
+Setup:
+
+1. Install dependencies: `npm install`
+2. Start WordPress environment: `npm run env:start`
+3. Run tests: `npm run test:e2e`
+
+See `tests/e2e/README.md` for detailed documentation on running and writing E2E tests.
+
+Available E2E test commands:
+
+* `npm run env:start` - Start WordPress test environment
+* `npm run env:stop` - Stop WordPress test environment
+* `npm run test:e2e` - Run E2E tests in headless mode
+* `npm run test:e2e:headed` - Run E2E tests with visible browser
+* `npm run test:e2e:ui` - Run E2E tests in interactive UI mode
+* `npm run test:e2e:debug` - Run E2E tests in debug mode
+* `npm run test:e2e:report` - View test report
+
+**Visual Regression Testing**
+
+This plugin uses Playwright for automated visual regression testing to catch unintended visual changes during development.
+
+*Prerequisites:*
+
+- Node.js 18 or higher
+- Playwright browsers installed (Chromium by default)
+
+*Initial Setup:*
+
+1. Install dependencies: `npm install`
+2. Install Playwright browsers: `npx playwright install --with-deps chromium`
+3. Build the application: `npm run build`
+
+*Running Visual Tests:*
+
+- Run all visual tests: `npm run test:visual`
+- Run tests in UI mode (interactive): `npm run test:visual:ui`
+- Update baseline snapshots: `npm run test:visual:update`
+
+*How It Works:*
+
+Visual regression tests capture screenshots of the UI and compare them to baseline images. If there are visual differences, the tests will fail and generate a report showing what changed. This helps detect:
+
+- Unintended layout changes
+- CSS styling issues
+- Component rendering problems
+- Responsive design regressions
+
+*Test Coverage:*
+
+The visual tests cover:
+- Initial app state (no user selected)
+- User selector dropdown
+- Full menu interface with user selected
+- Menu list with toggle functionality
+- Admin bar options
+- Save and reset buttons
+- Checked menu states
+- Expandable submenus
+- Responsive layouts (tablet and mobile views)
+
+*Updating Snapshots:*
+
+When intentional UI changes are made, update the baseline snapshots:
+
+`npm run test:visual:update`
+
+Review the changes in the `tests/visual/app.spec.js-snapshots/` directory to ensure they match your intended changes.
+
+*CI Integration:*
+
+Visual regression tests run automatically on GitHub Actions for all pull requests and pushes to main/master branches. Test reports and snapshots are uploaded as artifacts for review.
+
+**Running All Tests**
+
+Run all tests (PHP unit tests + E2E tests):
+
+`npm run test`
+
+== Frequently Asked Questions ==
+
+= Does it work with WordPress Multisite? =
+
+Yes! In a multisite install, User Admin Simplifier works as follows:
+
+* plugin works on a per site/user basis
+* logging into dashboard for a specific site and visiting the plugin admin only shows the users with access to that site
+* restricting menus for users works as expected and disables menus for user on that site only
+* disabling menus for a user only affects current site. user's menus remain unaffected in other sites
+
+== Upgrade Notice ==
+
+= 2.0.0 =
+Major update: The admin UI has been completely rewritten using React for improved performance and user experience.
+Settings are now saved via AJAX without page reload. All existing functionality is preserved.
+
+= 0.7.1 =
+Enabled editing the admin bar menus and submenus.
+Enables hiding the admin bar entirely.
+
+= 0.6.4 =
+Tested up to WordPress 4.7.0.
+
+= 0.6.3 =
+Tested up to WordPress 4.0.0.
+Added icons for WordPress 4.0 plugin installer.
+
+= 0.6.2 =
+Tested up to WordPress 3.9.1.
+
+= 0.6.1 =
+Make css class for +/- more specific to avoid conflicts.
+
+== Screenshots ==
+
+1. Choose a user to edit their menus
+2. Check the menu section to disable. Click 'Save Changes' to apply your settings. Click 'Clear User Settings' to reset the disabled menus for the selected user.
+
+== Changelog ==
+
+= 3.1.0 =
+* Add role-based menu control: hide menus and submenus by user role, with optional per-user overrides.
+* New role editor with tri-state (inherit/show/hide) controls for fine-grained overrides.
+* Safeguard to prevent administrators from locking themselves out of the settings screen.
+
+= 3.0.1 =
+* Security hardening: sanitize option keys when saving user settings.
+
+= 2.0.0 =
+* Major UI rewrite using React
+* Settings are now saved via AJAX without page reload
+* Improved user experience with instant feedback on save/reset actions
+* Added success/error messages for user actions
+* All existing functionality preserved
+* Modern build process using Webpack
+
+= 1.0.1 =
+Mark as compatible with WordPress 5.7.
+
+= 0.7.1 =
+Enabled editing the admin bar menus and submenus.
+Enables hiding the admin bar entirely.
+
+= 0.6.4 =
+Tested up to WordPress 4.7.0.
+
+= 0.6.3 =
+Add icons for 4.0 plugin browser.
+Tested up to WordPress 4.0.
+
+= 0.6.2 =
+Tested up to WordPress 3.9.1.
+
+= 0.6.1 =
+Make css class for +/- more specific to avoid conflicts.
+
+= 0.6 =
+Fixes issue with removing certain submenus, use sanitize_key for all key values.
+
+= 0.5.4 =
+Corrects a bug where $menu was unset causing an error message with some themes/plugins; added sanity isset check for $menu before trying to use.
+
+= 0.5.3 =
+Bug fixes, last update broke plugin for some users; also fixed issue with user_login used in one spot, user_nicename used in another. Code cleanup.
+
+= 0.5.2 =
+Bug fix.
+
+= 0.5.1 =
+* Corrected issue that prevented Appearance->Editor from showing up (at all).
+
+= 0.4.3 =
+* code cleanup
+
+= 0.4.2 =
+* added code to handle submenus as well as top level menus
+* moved main plugin menu to Tools section of Dashboard
+
+= 0.3.3 =
+* corrected typo/internationalization issue
+
+= 0.3.2 =
+* bug fixes
+
+
+= 0.3.1 =
+* updated code for Clear User Settings button to clear settings for selected user
+* updated plugin admin, added priorities - uses stored menu if menu already modified, that way current user can always see all menu items
+
+
+= 0.3 =
+* added uninistall file - will now remove options when deleting plugin
+* added reset user options button to clear all checkmarks for selected user
+
+= 0.23 =
+* initial release.
+
+
+### WordFence verification code
+axjzfnshmtr7f7ggjqovzuxjzxrlpbc7

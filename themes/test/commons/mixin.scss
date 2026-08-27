@@ -1,0 +1,52 @@
+$color-accent:#0A0E46;
+$color-gray:#F8F7F0;
+$content-width:1200px;
+
+@mixin flex-center {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+@mixin align-center {
+  display: block;
+  margin: 0 auto;
+}
+
+@mixin nav-text {
+  color: inherit;
+  text-decoration: none;
+}
+
+@mixin defaulth2 {
+  padding: 0;
+  background-image: none;
+  font-size: 1.9rem;
+}
+
+@mixin defaulth3 {
+  padding-left: 0;
+  background-image: none;
+}
+
+$pc: 1100px; // PC
+$tab: 768px; // タブレット
+$sp: 550px; // スマホ
+
+@mixin pc {
+  @media (max-width: ($pc)) {
+    @content;
+  }
+}
+
+@mixin tab {
+  @media (max-width: ($tab)) {
+    @content;
+  }
+}
+
+@mixin sp {
+  @media (max-width: ($sp)) {
+    @content;
+  }
+}

@@ -1,0 +1,36 @@
+.ticker {
+  margin: 0 auto;
+  text-align: left;
+  border: #A4946A 1px double;
+  position: relative;
+  overflow: hidden;
+
+  font-size: 120%;
+ 
+}
+
+.ticker ul {
+  width: 98%;
+  position: relative;
+}
+
+.ticker ul li {
+  width: 98%;
+  display: none;
+}
+
+.ticker_area {
+  margin: 0 auto;
+  height:140px;
+  overflow:auto;
+  text-align: left;
+  border: #A4946A 1px double;
+  position: relative;
+  overflow: auto;
+  background-color: #2a2525;
+}
+
+.ticker_area ul{
+	margin-left:0px;
+	padding-left:0px;
+}

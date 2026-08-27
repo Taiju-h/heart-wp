@@ -1,0 +1,2123 @@
+<?php
+define("USER_DB", 'heartf');
+define("USER_ID", 'root');
+define("USER_PASS", 'Sora13%2lom');
+define("SEVER", '210.131.223.248');
+
+define("USER_CHATSET", 'utf8');
+define("USER_IMG4", '/home/heartf/heartf.com/public_html/uranai/Public/app/webroot/img/');
+define("USER_IMG", 'https://uranai.heartf.com/swfu/d/');
+define("USER_IMG2", 'https://uranai.heartf.com/images/');
+define("USER_IMG3", 'https://uranai.heartf.com/images3/');
+define("USER_URL", 'https://uranai.heartf.com/Public/');
+
+
+date_default_timezone_set('Asia/Tokyo');
+
+//	define("USER_URL", 'https://uranai.heartf.com/Public/');
+
+require_once('tenpo.php');
+
+if (!function_exists('h')) {
+	function h($text)
+	{
+		return htmlspecialchars((string) $text, ENT_QUOTES, 'UTF-8');
+	}
+}
+
+function plugin_db_select_convert($pref, $mtenpo_id = NULL, $sub = NULL, $sub2 = NULL, $sub3 = NULL, $sub4 = NULL)
+{
+	//		var_dump("BBB" . is_numeric($mtenpo_id) ."   " . $sub . "</br>");
+
+	$wk_id = $mtenpo_id;
+	if (empty($sub)) $sub = NULL;
+	if ($mtenpo_id == 'chat' or $mtenpo_id == 'tel') {
+		if (TENPO_ID == 'ALL')
+			$sub = NULL;
+		else  	$sub = TENPO_ID;
+		//var_dump("CCC" . $mtenpo_id ."   " . $sub . "</br>");
+	} else if (! is_numeric($mtenpo_id))
+		if (TENPO_ID != 'ALL')
+			$mtenpo_id = TENPO_ID;
+		else	$mtenpo_id = NULL;
+
+
+
+	switch ($pref) {
+		case 'tenpo_chokuei':
+			$output = tenpo_chokuei();
+			break;
+		case 'mkanteishi_view':
+			//var_dump("BBB" . $mtenpo_id ."   " . $sub . "</br>");
+			$output = mkanteishi_view($mtenpo_id, $sub, $sub2, $sub3, $sub4);
+			break;
+		case 'mtenpo_view':
+			$output = mtenpo_view($mtenpo_id, $sub);
+			break;
+		case 'mcast_top':
+			$output = mcast_top($sub, $mtenpo_id);
+			break;
+		case 'mcast_top2':
+			$output = mcast_top2($sub, $mtenpo_id, $sub2);
+			break;
+		case 'eoshirase':
+			$output = eoshirase_view($sub, $mtenpo_id);
+			break;
+		case 'blog_view':
+			$output = blog_view();
+			break;
+		case 'cal_view':
+		case 'cal_view2':
+			$output = cal_view($mtenpo_id, $sub);
+			break;
+		case 'info_view':
+			$output = info_view($mtenpo_id);
+			break;
+		case 'Tfeedback_view':
+
+			$output = Tfeedback_view($mtenpo_id, $sub, $sub2, $sub3);
+			break;
+		case 'banner_view':
+			$output = banner_view($mtenpo_id);
+			break;
+		case 'banner_view2':
+			$output = banner_view2($mtenpo_id);
+			break;
+		case 'elog_view':
+			$output = elog_view($mtenpo_id);
+			break;
+		case 'elog_list':
+			$output = elog_list($mtenpo_id);
+			break;
+		case 'elog_list2':
+			//	var_dump($sub, $mtenpo_id);
+			$output = elog_list2($sub, $mtenpo_id);
+			break;
+		case 'select_are':
+			$output = select_area($sub);
+			break;
+		case 'tw_area':
+			$output = tw_area($mtenpo_id);
+			break;
+		case 	'mtenpo_area_view':
+			$output = mtenpo_area_view();
+			break;
+		case 	'link_area_view':
+			$output = link_area_view();
+			break;
+		case 'blog_area':
+			$wk_id = sprintf("%04d", $mtenpo_id);
+			$output = "<iframe src='https://heartf.com/wplist_tenpo.php?id={$wk_id}' frameborder='0' width='100%' height='800;'>";
+
+			flush();
+			break;
+	}
+	//$output = "aaaa";
+	return $output;
+}
+
+function tenpo_chokuei()
+{
+	$wk = NULL;
+	$wk .= '<ul class="tenpo_list">';
+	$wk .= '<li><div class="tenpo_banner"><a href="https://asakusa3.uranai.heartf.com/" target="_blank"><img src="/images/tb-asakusa3.jpg" alt="浅草すしや通り店"><h5>占いハートフル<br> 浅草すしや通り店</h5><span class="tel">03-6231-6637</span><br> 最寄駅:浅草駅</a></div></li>';
+	$wk .= '<li><div class="tenpo_banner"><a href="https://ueno2.uranai.heartf.com/" target="_blank"><img src="/images/tb-uenohirokouji.jpg" alt="上野広小路店"><h5>占いハートフル<br> 上野広小路店</h5><span class="tel">03-6284-4168</span><br> 最寄駅:上野広小路駅</a></div></li>';
+	$wk .= '<li><div class="tenpo_banner"><a href="https://ueno.uranai.heartf.com/" target="_blank"><img src="/images/tb-ueno.jpg" alt="上野店"><h5>占いハートフル<br> 上野店</h5><span class="tel">03-6231-6780</span><br> 最寄駅:上野駅 </a></div></li>';
+	$wk .= '<li><div class="tenpo_banner"><a href="https://okachimachi.uranai.heartf.com/" target="_blank"><img src="/images/tb-okachimachi.jpg" alt="御徒町店"><h5>占いハートフル<br> 御徒町店</h5><span class="tel">03-6803-2567</span><br> 最寄駅:御徒町駅 </a></div></li>';
+	$wk .= '<li><div class="tenpo_banner"><a href="https://kanda.uranai.heartf.com/" target="_blank"><img src="/images/tb-kanda.jpg" alt="神田店"><h5>占いハートフル<br> 神田店</h5><span class="tel">03-6260-9026</span><br> 最寄駅:神田駅 </a></div></li>';
+	$wk .= '<li><div class="tenpo_banner"><a href="https://asakusaekimae.uranai.heartf.com/" target="_blank"><img src="/images/tb-asakusaekimae.jpg" alt="浅草駅前店"><h5>占いハートフル<br> 浅草駅前店</h5><span class="tel">03-6231-7199</span><br> 最寄駅:浅草駅 </a></div></li>';
+	$wk .= '<li><div class="tenpo_banner"><a href="https://asakusa.uranai.heartf.com/" target="_blank"><img src="/images/tb-asakusa.jpg" alt="浅草店"><h5>占いハートフル<br> 浅草店</h5><span class="tel">03-5830-3083</span><br> 最寄駅:浅草駅 </a></div></li>';
+
+	$wk .= '<li><div class="tenpo_banner"><a href="https://okubo.uranai.heartf.com/" target="_blank"><img src="/images/tb-ookubo.jpg" alt="大久保店"><h5>占いハートフル<br> 大久保店</h5><span class="tel">03-6279-1858</span><br> 最寄駅:大久保駅 </a></div></li>';
+	$wk .= '<li><div class="tenpo_banner"><a href="https://jiyugaoka.uranai.heartf.com/" target="_blank"><img src="/images/tb-jiyugaoka.jpg" alt="自由が丘店"><h5>占いハートフル<br> 自由が丘店</h5><span class="tel">03-5726-9499</span><br> 最寄駅:自由が丘駅 </a></div></li>';
+	$wk .= '<li><div class="tenpo_banner"><a href="https://jiyugaoka2.uranai.heartf.com/" target="_blank"><img src="/images/tb-jiyugaokaminami.jpg" alt="自由が丘南口店"><h5>占いハートフル<br> 自由が丘南口店</h5><span class="tel">03-6421-4943</span><br> 最寄駅:自由が丘駅 </a></div></li>';
+
+	$wk .= '<li><div class="tenpo_banner"><a href="https://yokohama.uranai.heartf.com/" target="_blank"><img src="/images/tb-isezakicho.jpg" alt="横浜伊勢佐木町店"><h5>占いハートフル<br> 横浜伊勢佐木町店</h5><span class="tel">045-334-7141</span><br> 最寄駅:伊勢佐木長者町駅 </a></div></li>';
+
+	$wk .= '<li><div class="tenpo_banner"><a href="https://tel.uranai.heartf.com/" target="_blank"><img src="/images/tb-tel.jpg" alt="リモート占い館"><h5>占いハートフル<br> リモート占い館</h5></a><br> 営業時間 障害対応は9:00~26:00 </div></li>';
+	$wk .= '</ul>';
+	return $wk;
+}
+
+function cal_view($id = NULL, $sub = NULL)
+{
+
+	$api_url = "https://uranai.heartf.com/Public/Eworkdays/refreshschedules";
+
+	// cURLを使用してAPIを呼び出す
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_URL, $api_url);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	$api_response = curl_exec($ch);
+	curl_close($ch);
+
+
+	$link = mysqli_connect(SEVER, USER_ID, USER_PASS, USER_DB);
+	mysqli_set_charset($link, USER_CHATSET);
+
+	if (mysqli_connect_errno()) {
+		printf("Connect failed: %s\n", mysqli_connect_error());
+		exit();
+	}
+
+
+
+	$tenponame = NULL;
+	if (!is_null($id)) {
+		$sq2 = "SELECT tenponame from mtenpos WHERE id = {$id}";
+		$data = mysqli_query($link, $sq2);
+
+		$tenponame = mysqli_fetch_assoc($data);
+		//var_dump($tenponame["tenponame"]);
+		if (is_null($sub))
+			$output = "<h2>占いハートフル {$tenponame['tenponame']}</h2>";
+	}
+
+	$today = date("Y-m-d");
+	if (is_null($sub))
+		$wksub = '>=';
+	else $wksub = $sub;
+	$sql = 'SELECT workdate, weekday, rname, mkanteishis.name_r, reservationti, mtimes.name as ts, mtime2.name as te, holiday_flg FROM eworkdays, mkanteishis, mtimes, mtimes as mtime2, mtenpos as mtenpo ';
+
+	$sql .= " WHERE eworkdays.mkanteishi_id = mkanteishis.id AND eworkdays.mtime_id = mtimes.id and eworkdays.mtime2_id = mtime2.id and eworkdays.mtenpo_id = mtenpo.id AND mtenpo.chokuei = 1 AND eworkdays.workdate {$wksub} '{$today}'";
+
+	//var_dump($sql, "Sub=" ,$wksub);
+
+	if (!is_null($id))
+		$sql .= " AND eworkdays.mtenpo_id = {$id} ";
+	$sql .= ' ORDER BY eworkdays.workdate,  eworkdays.mtime_id, eworkdays.mtenpo_id, mkanteishi_id';
+
+
+
+	$data = mysqli_query($link, $sql);
+
+	$week = array("日", "月", "火", "水", "木", "金", "土");
+	//if(is_null($mtenpo_id))
+	if (!is_null($id))
+		$ix = 4;
+	else if (!is_null($sub))
+		$ix = 3;
+	else $ix = 3;
+
+
+	if (! is_null($sub)) {
+		$wk_date = date("m-d") . "(" .  $week[date("w")] . ")";
+		$output .= "<h3>　　　{$wk_date}のスケジュール</h3>";
+		$output .= "<div class='schedule_inner kuchikomi_area'>";
+	} else 	$output .=  '<div class="kuchikomi_area">';
+
+	$output .=  "<table border='0' cellpadding='{$ix}' class='schedule' width='100%'><tr align='center'>";
+	$output1 = NULL;
+
+	while ($eworkday = mysqli_fetch_assoc($data)) {
+		$output1 .= '<tr>';
+		if (is_null($sub))
+			$output1 .=  '<td bgcolor="#E1E7FB" align="center">' . substr($eworkday['workdate'], 5) . "(" .  $week[$eworkday['weekday']] . ") </td>";
+
+		if ($eworkday['holiday_flg'] == 0)
+			$output1 .=  '<td bgcolor="B5CEE9" align="center"> ' . $eworkday['ts'] . " ～ " . $eworkday['te'] . '</td>';
+		else	$output1 .=  '<td bgcolor="#B5CEE9" align="center"> お　休　み</td>';
+		//if(is_null($mtenpo_id))
+
+
+		if (is_null($id)) // {					
+			$output1 .=  "<td  bgcolor='#E1E7FB' align='center'><a href='https://uranai.heartf.com/Public/Mkanteishis/view/0/0/{$eworkday['rname']}' target='_blank'>{$eworkday['rname']}</a></td>";
+		$output1 .=  "<td  bgcolor='#E1E7FB' align='center'><a href='https://uranai.heartf.com/Public/Mkanteishis/view/0/0/{$eworkday['name_r']}' target='_blank'>{$eworkday['name_r']}</a></td>";
+
+		$output1 .= '</tr>';
+
+
+		//} else $output1 .=  "<td  bgcolor='#E1E7FB' align='center'><a href='https://uranai.heartf.com/Public/Mkanteishis/view/0/0/{$eworkday['name_r']}' target='_blank'>{$eworkday['name_r']}</a></td></tr>";
+
+
+		if ($eworkday['holiday_flg'] == false)
+			$output1 .=  "<tr><td bgcolor='#FFFFFF' align='center' colspan='{$ix}'>" . $eworkday['reservationti'] . '　</td></tr>';
+	}
+	if (is_null($output1))
+		$output1 = '本日休業です';
+	$output1 .= '</table>';
+
+
+	$output1 .= '</tr></table>';
+	$output .= $output1;
+	$output .= '</div>';
+	//	$output.= '</section>';
+
+
+	mysqli_close($link);
+
+	return ($output);
+}
+
+
+
+function info_view($id = NULL)
+{
+	$link = mysqli_connect(SEVER, USER_ID, USER_PASS, USER_DB);
+	mysqli_set_charset($link, USER_CHATSET);
+	//mysqli_select_db(USER_DB, $link );
+
+	$sql = 'SELECT DISTINCT  info, tenponame ';
+	$sql .= ' FROM mtenpos';
+	$sql .= ' WHERE id= ' . $id;
+
+	$data = mysqli_query($link, $sql);
+	$mtenpo = mysqli_fetch_assoc($data);
+
+	$output = "\n<h2>" .  $mtenpo['tenponame'] . "の特徴</h2>";
+	$output .= $mtenpo['info'];
+
+	$sq2 = 'SELECT count(id) as cnt FROM `mshutsuenday` WHERE mtenpo_id = ' .  $id;
+
+	$data = mysqli_query($link, $sq2);
+
+	$tenponame = mysqli_fetch_assoc($data);
+
+
+	$output .=  '<h2> ' . $tenponame['cnt'] . '名の占い師があなたの悩みをズバリと解決  </h2>';
+	$output .= <<<EOM
+		<div class="tenpo_syosai_photo">
+		<div class="img_margin_left" style=""><img src="swfu/d/custom_skin.png" alt="画像の説明" title="画像の説明"    class=" img-responsive"></div>
+		<p>占い師によって、得意とする占いのジャンルも異なりますので、あなたのご相談内容にあった占いを得意とする占い師をお選びいただくことが出来ます。<br />
+		<span style="font-size:20px;color:brown;background-color:inherit;"  class="qhm-deco">『タイプによってどの占い師がおすすめか？』</span><br />
+		<span style="font-size:20px;color:brown;background-color:inherit;"  class="qhm-deco">『悩みに最適な占術はなに？』</span><br />
+		などについての質問も承っておりますので、お気軽にお問い合わせください。<br />
+		<span style="font-size:18px;color:brown;background-color:inherit;"  class="qhm-deco">店頭でも占いって何がわかるの？などの無料でお答え中</span></p>
+		</div>
+		<h2>お客様に安心して鑑定を受けていただくために  <a</a></h2>
+		<div class="unsei_text">
+		<h3>占いの料金 </h3>
+		<p>当社では明確な料金設定を心がけており、鑑定前にしっかりと料金説明をいたしております。<br />
+		お客様の予算あった鑑定を行い無理な延長はいたしましません。<br />
+		また、料金をはじめ、占いを受けて頂くにあたり、ご不明な点につきましてわかりやすい説明をご案内しておりますので、事前に様々なことをご確認いただいた上で、安心して占いを受けていただくことができます。</p>
+
+		<h3>感染症対策</h3>
+		<p>お客様へ<br />
+		いつも占いハートフルをご利用いただきまことにありがとうございます。<br />
+		占いハートフルでは、新型コロナウィルスの感染拡大にともないお客様と占い師の健康と安全を考慮し対策をしております。</p>
+		</div><p><br class="spacer" /></p>
+<div class="top_topic1">
+<p><a href="/index.php?Appraisal" title="Appraisal">お好きな時間・場所から<br class="spacer" />ご都合に合わせて<br class="spacer" />ご利用できます。</a></p>
+</div>
+<div class="top_topic2">
+<p><a href="/index.php?Appraisal" title="Appraisal">プロの占い師が、あなたの<br class="spacer" />
+お悩み、相談に合わせて<br class="spacer" />問題解決のお手伝い。</a></p>
+</div>
+
+EOM;
+
+
+	mysqli_close($link);
+	return ($output);
+}
+
+
+
+function mcast_top($chokuei = null, $mtenpo_id = null)
+{
+	$link = mysqli_connect(
+		SEVER,
+		USER_ID,
+		USER_PASS,
+		USER_DB
+	);
+
+	if (!$link) {
+		error_log(
+			'mcast_top DB接続エラー: ' .
+				mysqli_connect_error()
+		);
+
+		return '<!-- mcast_top: DB接続エラー -->';
+	}
+
+	if (!mysqli_set_charset($link, USER_CHATSET)) {
+		error_log(
+			'mcast_top 文字コード設定エラー: ' .
+				mysqli_error($link)
+		);
+	}
+
+	/*
+	 * WordPressの日本時間を使用。
+	 * 午前0時～4時台は前日の営業日。
+	 */
+	$now = current_datetime();
+	$currentHour = (int)$now->format('H');
+
+	if ($currentHour > 4) {
+		$today = $now->format('Y-m-d');
+	} else {
+		$today = $now
+			->modify('-1 day')
+			->format('Y-m-d');
+	}
+
+	$defaultMode = (
+		$chokuei === null ||
+		$chokuei === ''
+	);
+
+	/*
+	 * 今日の実店舗勤務。
+	 */
+	$sqlTenpo = "
+		SELECT
+			Mkanteishi.name,
+			Mkanteishi.yomigana,
+
+			Mtenpo.domain,
+			Mtenpo.tenponame,
+			Mtenpo.weboder,
+			Mtenpo.weblistcnt,
+
+			Eworkdays.mtenpo_id,
+			Eworkdays.mtime_id,
+			Eworkdays.mtime2_id,
+			Eworkdays.taikin AS taikin_flg,
+			Eworkdays.id AS EworkdaysID,
+
+			Mcast.mtenpo_id AS cast_tenpo_id,
+			Mcast.mshutuen_id,
+			Mcast.mkanteishi_id,
+
+			Mshutuen.img,
+			Mshutuen.name AS imgname
+
+		FROM eworkdays AS Eworkdays
+
+		INNER JOIN mkanteishis AS Mkanteishi
+			ON Mkanteishi.id = Eworkdays.mkanteishi_id
+
+		INNER JOIN mtenpos AS Mtenpo
+			ON Mtenpo.id = Eworkdays.mtenpo_id
+
+		INNER JOIN mcast AS Mcast
+			ON (
+				Mcast.mkanteishi_id = Eworkdays.mkanteishi_id
+				AND Mcast.mdivision_id = 1
+			)
+
+		LEFT JOIN mshutuens AS Mshutuen
+			ON Mshutuen.id = Mcast.mshutuen_id
+
+		WHERE
+			Eworkdays.workdate = '{$today}'
+			AND Eworkdays.holiday_flg = 0
+			AND Eworkdays.id > 0
+			AND Eworkdays.mtenpo_id <> 51
+			AND Mcast.mkanteishi_id <> 5
+	";
+
+	if ($defaultMode) {
+		$sqlTenpo .= "
+			AND Mtenpo.chokuei = 1
+		";
+	} else {
+		$sqlTenpo .= "
+			AND Mtenpo.id IN (2, 71)
+		";
+	}
+
+	if (
+		$mtenpo_id !== null &&
+		$mtenpo_id !== ''
+	) {
+		$targetTenpoId = (int)$mtenpo_id;
+
+		$sqlTenpo .= "
+			AND Mtenpo.id = {$targetTenpoId}
+		";
+	}
+
+	$sqlTenpo .= "
+		ORDER BY
+			Mtenpo.weboder,
+
+			CASE
+				WHEN Mcast.mtenpo_id = Eworkdays.mtenpo_id
+					THEN 0
+				ELSE 1
+			END,
+
+			Eworkdays.mtime_id,
+			Mshutuen.oder,
+			Mkanteishi.mpost_id,
+			Mkanteishi.mtankataimen_id DESC,
+			Mkanteishi.id
+	";
+
+	/*
+	 * リモート。
+	 *
+	 * 通常：今日のリモート勤務
+	 * マイナスID：Mcast店舗51かつステータス1
+	 */
+	$sqlRemote = "
+		SELECT
+			Mkanteishi.name,
+			Mkanteishi.yomigana,
+
+			Mtenpo.domain,
+			Mtenpo.tenponame,
+			Mtenpo.weboder,
+			Mtenpo.weblistcnt,
+
+			Eworkdays.mtenpo_id,
+			Eworkdays.mtime_id,
+			Eworkdays.mtime2_id,
+			Eworkdays.id AS EworkdaysID,
+
+			Mcast.mtenpo_id AS cast_tenpo_id,
+			Mcast.mshutuen_id,
+			Mcast.mkanteishi_id,
+
+			Mshutuen.img,
+			Mshutuen.name AS imgname
+
+		FROM eworkdays AS Eworkdays
+
+		INNER JOIN mkanteishis AS Mkanteishi
+			ON Mkanteishi.id = Eworkdays.mkanteishi_id
+
+		INNER JOIN mtenpos AS Mtenpo
+			ON Mtenpo.id = Eworkdays.mtenpo_id
+
+		INNER JOIN mcast AS Mcast
+			ON (
+				Mcast.mkanteishi_id = Eworkdays.mkanteishi_id
+				AND Mcast.mdivision_id = 1
+			)
+
+		LEFT JOIN mshutuens AS Mshutuen
+			ON Mshutuen.id = Mcast.mshutuen_id
+
+		WHERE
+			Mkanteishi.delflg = 0
+			AND Eworkdays.mtenpo_id = 51
+
+			AND (
+				(
+					Eworkdays.workdate = '{$today}'
+					AND Eworkdays.holiday_flg = 0
+					AND Eworkdays.id > 0
+				)
+
+				OR
+
+				(
+					Eworkdays.id < 0
+					AND Mcast.mtenpo_id = 51
+					AND Mcast.mshutuen_id = 1
+				)
+			)
+
+			AND Mtenpo.chokuei = 1
+			AND Mcast.mkanteishi_id <> 5
+	";
+
+	$sqlRemote .= "
+		ORDER BY
+			CASE
+				WHEN Eworkdays.id > 0
+					THEN 0
+				ELSE 1
+			END,
+
+			Eworkdays.mtime_id,
+			Mshutuen.oder,
+			Mkanteishi.mpost_id,
+			Mkanteishi.mtankataimen_id DESC,
+			Mkanteishi.id
+	";
+
+	/*
+	 * カードHTML作成。
+	 */
+	$createCard = static function (array $mcast): string {
+		$mkanteishiId = (int)$mcast['mkanteishi_id'];
+
+		$name = htmlspecialchars(
+			(string)$mcast['name'],
+			ENT_QUOTES,
+			'UTF-8'
+		);
+
+		$tenponame = htmlspecialchars(
+			(string)$mcast['tenponame'],
+			ENT_QUOTES,
+			'UTF-8'
+		);
+
+		$imgname = htmlspecialchars(
+			(string)$mcast['imgname'],
+			ENT_QUOTES,
+			'UTF-8'
+		);
+
+		$profileImage =
+			sprintf('%04d', $mkanteishiId) .
+			'.jpg';
+
+		$profileUrl =
+			USER_IMG3 .
+			$profileImage;
+
+		$detailUrl =
+			USER_URL .
+			'Mkanteishis/view/' .
+			$mkanteishiId .
+			'/' .
+			TENPO_ID .
+			'/';
+
+		$statusImage =
+			USER_IMG2 .
+			$mcast['img'];
+
+		$html = '<li>';
+
+		$html .=
+			'<a href="' .
+			htmlspecialchars(
+				$detailUrl,
+				ENT_QUOTES,
+				'UTF-8'
+			) .
+			'" target="_kanteishi">';
+
+		$html .=
+			'<img src="' .
+			htmlspecialchars(
+				$profileUrl,
+				ENT_QUOTES,
+				'UTF-8'
+			) .
+			'?v=' .
+			time() .
+			'" alt="' .
+			$name .
+			'">';
+
+		$html .=
+			'<h4 class="Mincho">' .
+			$name .
+			'先生<span> ' .
+			$tenponame .
+			'</span></h4>';
+
+		$mtimeId =
+			isset($mcast['mtime_id'])
+			? (int)$mcast['mtime_id']
+			: null;
+
+		$mtime2Id =
+			isset($mcast['mtime2_id'])
+			? (int)$mcast['mtime2_id']
+			: null;
+
+		if (
+			$mtimeId !== null &&
+			$mtime2Id !== null &&
+			$mtimeId > 0 &&
+			$mtime2Id > 0
+		) {
+			$strtime = heartftime(
+				$mtimeId,
+				$mtime2Id
+			);
+
+			$html .=
+				'<h4 class="Mincho">' .
+				htmlspecialchars(
+					$strtime,
+					ENT_QUOTES,
+					'UTF-8'
+				) .
+				'</h4>';
+		}
+
+		$html .=
+			'<img src="' .
+			htmlspecialchars(
+				$statusImage,
+				ENT_QUOTES,
+				'UTF-8'
+			) .
+			'" width="150" alt="' .
+			$imgname .
+			'">';
+
+		$html .= '</a>';
+		$html .= '</li>';
+
+		return $html;
+	};
+
+	/*
+	 * 実店舗SQL実行。
+	 */
+	$tenpoData = mysqli_query(
+		$link,
+		$sqlTenpo
+	);
+
+	if ($tenpoData === false) {
+		$sqlError = mysqli_error($link);
+
+		error_log(
+			'mcast_top 実店舗SQLエラー: ' .
+				$sqlError .
+				PHP_EOL .
+				$sqlTenpo
+		);
+
+		mysqli_close($link);
+
+		return
+			'<!-- mcast_top 実店舗SQLエラー: ' .
+			htmlspecialchars(
+				$sqlError,
+				ENT_QUOTES,
+				'UTF-8'
+			) .
+			' -->';
+	}
+
+	$output  = '<div class="bg_gradation">';
+	$output .= '<div class="soothsayer">';
+	$output .= '<section class="content">';
+	$output .= '<h2>本日の占い師</h2>';
+	$output .= '<ul class="soothsayer_list">';
+
+	$displayed = [];
+
+	/*
+	 * 実店舗を先に表示。
+	 */
+	while ($mcast = mysqli_fetch_assoc($tenpoData)) {
+		$mkanteishiId = (int)$mcast['mkanteishi_id'];
+
+		if (isset($displayed[$mkanteishiId])) {
+			continue;
+		}
+
+		/*
+		 * 実店舗勤務が退勤済みなら表示しない。
+		 * displayedに登録しないため、
+		 * リモート条件を満たせばリモート側で表示される。
+		 */
+		if (
+			isset($mcast['taikin_flg']) &&
+			(int)$mcast['taikin_flg'] === 1
+		) {
+			continue;
+		}
+
+		$displayed[$mkanteishiId] = true;
+		$output .= $createCard($mcast);
+	}
+
+	mysqli_free_result($tenpoData);
+
+	/*
+	 * リモートを後から表示。
+	 */
+	$showRemote =
+		$defaultMode &&
+		(
+			$mtenpo_id === null ||
+			$mtenpo_id === '' ||
+			(int)$mtenpo_id === 51
+		);
+
+	if ($showRemote) {
+		$remoteData = mysqli_query(
+			$link,
+			$sqlRemote
+		);
+
+		if ($remoteData === false) {
+			error_log(
+				'mcast_top リモートSQLエラー: ' .
+					mysqli_error($link) .
+					PHP_EOL .
+					$sqlRemote
+			);
+
+			$output .=
+				'<!-- mcast_top: リモートSQLエラー -->';
+		} else {
+			while ($mcast = mysqli_fetch_assoc($remoteData)) {
+				$mkanteishiId =
+					(int)$mcast['mkanteishi_id'];
+
+				if (isset($displayed[$mkanteishiId])) {
+					continue;
+				}
+
+				$eworkdaysId =
+					isset($mcast['EworkdaysID'])
+					? (int)$mcast['EworkdaysID']
+					: null;
+
+				$mshutuenId =
+					isset($mcast['mshutuen_id'])
+					? (int)$mcast['mshutuen_id']
+					: null;
+
+				$castTenpoId =
+					isset($mcast['cast_tenpo_id'])
+					? (int)$mcast['cast_tenpo_id']
+					: null;
+
+				/*
+				 * マイナスIDは
+				 * Mcast店舗51かつステータス1だけ。
+				 */
+				if (
+					$eworkdaysId !== null &&
+					$eworkdaysId < 0 &&
+					(
+						$castTenpoId !== 51 ||
+						$mshutuenId !== 1
+					)
+				) {
+					continue;
+				}
+				$displayed[$mkanteishiId] = true;
+				$output .= $createCard($mcast);
+			}
+
+			mysqli_free_result($remoteData);
+		}
+	}
+
+	$output .= '</ul>';
+	$output .= '</section>';
+	$output .= '</div>';
+	$output .= '</div>';
+
+	mysqli_close($link);
+
+	return $output;
+}
+
+
+
+function mcast_top2($chokuei = NULL, $mtenpo_id = null)
+{
+	//var_dump($chokuei);
+	$link = mysqli_connect(SEVER, USER_ID, USER_PASS, USER_DB);
+
+	mysqli_set_charset($link, USER_CHATSET);
+	//mysqli_select_db(USER_DB, $link );
+
+	$sql =  'SELECT id, name From mtankas ORDER BY id';
+	$data = mysqli_query($link, $sql);
+
+	while ($wk = mysqli_fetch_assoc($data)) {
+		$tanka[$wk['id']] = $wk['name'];
+		//var_dump($tanka);
+	};
+	//var_dump($tanka);
+	//var_dump($chokuei,$mtenpo_id, $new );
+	$data = NULL;
+
+	$week = array("日", "月", "火", "水", "木", "金", "土");
+	$today = date("Y-m-d");
+	$sql =  'SELECT Mkanteishi.name, Mkanteishi.pr_senjitsut, Mkanteishi.therapiest, Mkanteishi.mtankatel_id, Mkanteishi.mtankataimen_id, Mtenpo.domain, Mtenpo.tenponame, Mkanteishi.shasin, Mkanteishi.yomigana, Mcast.mtenpo_id, Mcast.mshutuen_id, Mcast.mkanteishi_id, Mtenpo.weboder, Mtenpo.weblistcnt, Mshutuen.img FROM mcast AS Mcast';
+	$sql .= ' LEFT JOIN mkanteishis AS Mkanteishi ON (Mcast.mkanteishi_id = Mkanteishi.id) ';
+	$sql .= ' LEFT JOIN mtenpos AS Mtenpo ON (Mcast.mtenpo_id = Mtenpo.id) ';
+	$sql .= ' LEFT JOIN mshutuens AS Mshutuen ON (Mcast.mshutuen_id = Mshutuen.id) ';
+
+
+	if (is_null($chokuei))
+		$sql .= " WHERE Mtenpo.chokuei = '1' AND Mcast.mdivision_id = 1";
+	else $sql .=  " WHERE Mtenpo.id in(2,71)  AND Mcast.mdivision_id = 1";
+
+	if (!is_null($mtenpo_id))
+		$sql .= " AND Mtenpo.id = " . $mtenpo_id;
+	$sql .= " ORDER BY Mtenpo.weboder ,Mshutuen.oder, Mkanteishi.mpost_id , Mkanteishi.mtankataimen_id DESC, Mkanteishi.id ";
+
+	$data = mysqli_query($link, $sql);
+
+	$output = NULL;
+	if (! empty($data)) {
+		$tenpo_id = $tenpo_name = NULL;
+		$output .= '<div class="cards">';
+
+		while ($mcast = mysqli_fetch_assoc($data)) {
+
+			$image = base64_encode($mcast['shasin']);
+			$alt =  $mcast['name'];
+			$output .= '<a class="cards__item card" href="' . USER_URL . 'Mkanteishis/view/' . $mcast['mkanteishi_id'] . '/51/">';
+			$output .= '<div class="card__header">';
+			$output .= '<div class="card__img">';
+			// $output .='<a href="' . USER_URL . 'Mkanteishis/view/' . $mcast['mkanteishi_id'] . '/' . TENPO_ID .'/"target="_kanteishi">';
+			$wk_str = sprintf("%04d", $mcast['mkanteishi_id']);
+
+			$time = time();
+			$output .= '<img src="' . USER_IMG3 . $wk_str . '.jpg?v=' . $time . '" alt="' . $alt . '">';
+			//nakomi
+			//$output .= "<img src='data:image/jpeg;base64,${image}' alt= ${alt}  /></div>";
+			$output .= '<div class="card__detail">';
+			$output .= '<div class="card__title"><span>' . h($mcast['name']) . '先生</span>' . h($mcast['yomigana']) . '</div>';
+			$output .= '<ul class="card__uranai_typeList">';
+			$output .= '<li class="icon-tel">' . $tanka[$mcast['mtankatel_id']] . '</li>';
+			//$output .= '<li class="icon-zoom">　' . $tanka[$mcast['mtankatel_id']] . '</li>';
+			//$output .= '<li>4/6 18:00〜23:00</li>';
+			$output .= '</ul></div></div>';
+			$output .= '<div class="card__body">';
+			$output .= '<p class="card__btn"><img src="' . USER_IMG2 .  $mcast['img'] . '"></p>';
+			$output .= '<div class="card__excerpt">' . $mcast['pr_senjitsut'] . '</div></div> </a>';
+		}
+	}
+
+
+	if (is_null($output)) {
+		$output .= '<h4 id="content_1_3">只今営業時間外です。スケジュールを表示しております。</h4>';
+		$sql = "SELECT mtenpos.id as id,  tenponame, mtimes.name as te7 FROM mtenpos ,mtimes  WHERE mtenpos.te7 = mtimes.id";
+		if (is_null($chokuei)) {
+			$sql .= " And  chokuei = '1' and domain is not null";
+			if (!is_null($mtenpo_id))
+				$sql .= " AND mtenpos.id = " . $mtenpo_id;
+		} else
+			$sql .=  "  AND mtenpos.id = 71";
+		// mtimes.name as ts, mtime2.name as te FROM eworkdays, mkanteishis, mtimes, mtimes as mtime2
+		$sql .= "  ORDER BY weboder ASC";
+
+
+		$data = mysqli_query($link, $sql);
+
+
+		while ($Mtenpo = mysqli_fetch_assoc($data)) {
+			$sql = 'SELECT workdate, weekday, holiday_flg, mkanteishis.name_r, reservationti, mtimes.name as ts, mtime2.name as te FROM eworkdays, mkanteishis, mtimes, mtimes as mtime2 ';
+			$sql .= 'WHERE eworkdays.mkanteishi_id = mkanteishis.id AND eworkdays.mtime_id = mtimes.id and eworkdays.mtime2_id = mtime2.id  AND eworkdays.workdate = "' . $today;
+			$sql .= '" AND eworkdays.mtenpo_id = ' . $Mtenpo['id'];
+			$sql .= ' ORDER BY eworkdays.workdate, eworkdays.mtime_id, mkanteishi_id';
+
+
+			$output .= $Mtenpo['tenponame'] . '</BR>';
+			$output .=  '<table border="0" cellpadding="3"  class="kuchikomi_area", width="100%">';
+
+			$output .=  '<tr><td  align="center" bgcolor="#E1E7FB">出演日</td><td  bgcolor="#B5CEE9" align="center">占い師名</td><td bgcolor="#E1E7FB" align="center" >出演時間</td></tr><tr>';
+			$output .=  '<tr><td bgcolor="#FFFFFF" align="center" colspan="3">予　約　状　況</td></tr></table>';
+
+			$output .=  '<div class="kuchikomi_area">';
+			$output .=  '<table border="0" cellpadding="3" class="schedule" width="100%"><tr align="center">';
+
+			$data2 = mysqli_query($link, $sql);
+			while ($eworkday = mysqli_fetch_assoc($data2)) {
+				$output .=  '<td  bgcolor="#E1E7FB"">' . substr($eworkday['workdate'], 5) . "(" .  $week[$eworkday['weekday']] . ") </td>";
+				$output .=  '<td  bgcolor="#B5CEE9">' . $eworkday['name_r'] . '</td>';
+				if ($eworkday['holiday_flg'] == 0) {
+					if ($eworkday['te'] > $Mtenpo['te7'])
+						$eworkday['te'] = $Mtenpo['te7'];
+					$output .=  '<td  bgcolor="#E1E7FB"> ' . $eworkday['ts'] . " ～ " . $eworkday['te'] . '</td><tr align="center">';
+					$output .=  '<td  bgcolor="#FFFFFF" align="center" colspan="3">' . $eworkday['reservationti'] . '　</td><tr align="center">';
+				} else	$output .=  '<td  bgcolor="#E1E7FB"> お　休　み</td><tr align="center">';
+			}
+			$output .= '</tr></table></div>';
+		}
+	}
+	$output .= '<div style="clear:both;"></div>';
+	mysqli_close($link);
+	return ($output);
+}
+
+function eoshirase_view($kbn = NULL, $mtenpo_id = NULL)
+{
+
+	/* kbn = 1 占い師、2 = 会社 4= 両方*/
+
+	$link = mysqli_connect(SEVER, USER_ID, USER_PASS, USER_DB);
+	mysqli_set_charset($link, USER_CHATSET);
+	//mysqli_select_db(USER_DB, $link );
+	if ($kbn == 1) {
+		$SQL = "SELECT  Eoshirase.word as word, Mkanteishi.name as name FROM eoshirase as Eoshirase, mkanteishis as Mkanteishi ";
+		$SQL .= " WHERE Eoshirase.mkanteishi_id = Mkanteishi.id AND Eoshirase.mdivision_id = 1";
+		$SQL .= ' AND Eoshirase.period >= DATE_FORMAT(now(),"%Y-%m-%D") ORDER BY  Eoshirase.id  DESC';
+	}
+	if ($kbn == 2) {
+		//var_dump($kbn. "<br>" . $mtenpo_id);
+
+		$SQL = "SELECT  Ecoshirase.sdate, Ecoshirase.word  FROM ecoshirases as Ecoshirase";
+		$SQL .= " WHERE Ecoshirase.mdivision_id = 1 AND (Ecoshirase.mtenpo_id = 1 OR ";
+		if ($mtenpo_id == 1)
+			$SQL .= " Ecoshirase.allflg = 1)";
+		else $SQL .= " Ecoshirase.mtenpo_id = " . $mtenpo_id . ")";
+		$SQL .= ' AND Ecoshirase.period >= DATE_FORMAT(now(),"%Y-%m-%D") ORDER BY  Ecoshirase.sdate  DESC';
+	}
+	//var_dump($kbn. "<br>" .$SQL);
+	if ($kbn == 3) {
+
+		$SQL = "SELECT  Ecoshirase.sdate, Ecoshirase.word  FROM ecoshirasem as Ecoshirase";
+		$SQL .= " WHERE Ecoshirase.mdivision_id = 1 AND Ecoshirase.mtenpo_id = " . $mtenpo_id;
+		$SQL .= ' AND Ecoshirase.period >= DATE_FORMAT(now(),"%Y-%m-%D") ORDER BY  Ecoshirase.sdate  DESC';
+	}
+
+	$data = mysqli_query($link, $SQL);
+	$output = NULL;
+	if ($kbn == 2 or $kbn == 3) {
+		$output .= '<div class="kousin_area">';
+		$output .= '<ul>';
+
+		while ($ecoshirase = mysqli_fetch_assoc($data)) {
+
+			$output .= '<li><b>' .  substr($ecoshirase['sdate'], 5) . ' </b>';
+
+			$output .=  $ecoshirase['word'];
+			$output .= '</li>';
+		}
+	}
+
+	if ($kbn == 1) {
+		while ($ecoshirase = mysqli_fetch_assoc($ecoshirases)) {
+			$output .= '<li><b>' . $eoshirase['name'] . "よりお知らせ" . '</b></br>' . $eoshirase['word'] . '</li>';
+		}
+		if (!is_null($output))
+			$output =  '<h2>鑑定士よりお知らせ</h2><div class="kousin_area"><ul>' . $putput;
+	}
+
+	if (!is_null($output))
+		$output .= '</ul></div>';
+	mysqli_close($link);
+	return ($output);
+}
+
+
+function Tfeedback_view($id = NULL, $kid = NULL, $count = NULL, $mcount = NULL)
+{
+	$link = mysqli_connect(SEVER, USER_ID, USER_PASS, USER_DB);
+	mysqli_set_charset($link, USER_CHATSET);
+	//mysqli_select_db(USER_DB, $link );
+	$output = NULL;
+
+	$sql = 'SELECT DISTINCT  Mkanteishi.name, Tfeedback.nicname, Tfeedback.feedback, Mnendai.name as Mname, Msex.KBN, Tfeedback.mnendai_id, Tfeedback.mkanteishi_id, Tfeedback.created, Mevaluate.name as evaname';
+	$sql .= ' FROM mkanteishis AS Mkanteishi, tfeedback AS Tfeedback, msex as Msex, mnendais as Mnendai, mshutsuenday AS Mshutsuenday, mevaluates as Mevaluate';
+	$sql .= ' WHERE Mkanteishi.delflg = 0 AND Tfeedback.approval_kbn = 1 ';
+	$sql .= ' AND Tfeedback.msex_id  = Msex.id ';
+	$sql .= ' AND Tfeedback.mnendai_id  = Mnendai.id ';
+	$sql .= ' AND Tfeedback.mevaluate_id =  Mevaluate.id';
+	$sql .= ' AND Tfeedback.mkanteishi_id = Mkanteishi.id ';
+	$sql .= ' AND Mkanteishi.id =  Mshutsuenday.mkanteishi_id';
+
+	if (! is_null($id))
+		$sql .= " AND Mshutsuenday.mtenpo_id= {$id}";
+	if (! is_null($kid))
+		$sql .= " AND Tfeedback.mkanteishi_id= {$kid}";
+
+	$sql .= ' ORDER BY  Tfeedback.id  DESC';
+	if (! empty($count))
+		$sql .=  " LIMIT {$count}";
+
+	//var_dump($count);
+	$Tfeedbacks = mysqli_query($link, $sql);
+	//if(is_array($Tfeedbacks)) {
+	$output .= "<h2 class='Mincho title'>お客様の声<span>customer's voice</span></h2>";
+	if (!is_null($mcount))
+		$output .= "<ul class='voice slick2'>";
+	else $output .= "<ul class='voice'>";
+
+	$img3 = USER_IMG3;
+	//var_dump($img3);
+	//var_dump($Tfeedbacks );
+	while ($row = mysqli_fetch_assoc($Tfeedbacks)) {
+
+		$output .= " <li><div class='profile_container'>";
+		$wk_str = sprintf("%04d", $row['mkanteishi_id']);
+
+		$time = time();
+
+		$output .= "<img src='{$img3}{$wk_str}.jpg?v={$time}' alt='{$row['Mname']}'>";
+		//				var_dump($output2);
+		//exit;
+		if (! is_null($mcount))
+			$wk_str = mb_substr($row['feedback'], 0, $mcount);
+		else	$wk_str = $row['feedback'];
+
+		$output .= '<div class="profile_detail">';
+		$date = new DateTime($row['created']);
+		$wk_date = $date->format('Y-m-d');
+		$output .= "<span>{$wk_date}</span>";
+		$wk_nic = '　　　　　　' . $row['nicname'];
+		$output .=  "<p class='Mincho'>{$wk_nic}({$row['Mname']}{$row['KBN']})</p></div>";
+		$output .= "<span class='hosi'>{$row['evaname']}</span><p>{$wk_str}</p></li>";
+	}
+	$output .= '       </ul>';
+	//}
+	mysqli_close($link);
+	return $output;
+}
+
+
+function mtenpo_view2($id = null, $sub = null)
+{
+	$link = mysqli_connect(SEVER, USER_ID, USER_PASS, USER_DB);
+	mysqli_set_charset($link, USER_CHATSET);
+	//mysqli_select_db(USER_DB, $link );
+
+	$output = '<div class=tenpo_content">';
+	$sql = 'SELECT DISTINCT  tenponame, address, linkmap, businesshours, map, info, emap, url, telno, chokuei';
+	$sql .= ' FROM mtenpos';
+	$sql .= ' WHERE id= ' . $id;
+
+	$data = mysqli_query($link, $sql);
+	$mtenpo = mysqli_fetch_assoc($data);
+	if ($sub == '') $sub = NULL;
+	$stenpo_id = sprintf("%04d", $id);
+
+	$output .= '<h2>店舗のご案内</h2>';
+
+	if ($sub == 2) {
+
+		$output .= '<h3>店内の様子</h3>';
+		$output .= '<div class="tenpo_syosai_photo">';
+		$output .= '<div class="tenpo_photo_left">';
+		$output .=  '<img src="' . USER_IMG . $stenpo_id . '_photo_1.jpg" alt="' . $mtenpo['tenponame'] . '" title="' . $mtenpo['tenponame'] . '">';
+		$output .= '</div>';
+		$output .= ' <div class="tenpo_photo_right">';
+		$output .=  '<img src="' . USER_IMG . $stenpo_id . '_photo_2.jpg" alt="' . $mtenpo['tenponame'] . '" title="' . $mtenpo['tenponame'] . '">';
+		$output .= '</div>';
+		$output .= '</div></div>';
+		$output .= '<h2>スケジュール</h2>';
+
+		$output .= cal_view($id);
+		return $output;
+	}
+
+	$output .= '<h3>店内の様子</h3>';
+	$output .= '<div class="tenpo_syosai_photo">';
+	$output .= '<div class="tenpo_photo_left">';
+	$output .=  '<img src="' . USER_IMG . $stenpo_id . '_photo_1.jpg" alt="' . $mtenpo['tenponame'] . '" title="' . $mtenpo['tenponame'] . '">';
+	$output .= '</div>';
+	$output .= ' <div class="tenpo_photo_right">';
+	$output .=  '<img src="' . USER_IMG . $stenpo_id . '_photo_2.jpg" alt="' . $mtenpo['tenponame'] . '" title="' . $mtenpo['tenponame'] . '">';
+	$output .= '</div>';
+	$output .= '</div>';
+
+	$output .= '<div class="annai_text">';
+	$output .= '<p><span style="font-size:20px;color:brown;background-color:inherit;"  class="qhm-deco">';
+	if ($mtenpo['chokuei'])
+		$output .= '占いハートフル　';
+	$output .= $mtenpo['tenponame'] . "</span></p>";
+
+	$output .= '<h3>所在地</h3>';
+	$output .= '<p>' . $mtenpo['address'] . '<br />';
+	$output .= '<a href="' .  $mtenpo['linkmap'] . '" target="_blank">＞google mapで見る</a></p>';
+	$output .= '<h3>TEL</h3>';
+	$output .= '<p><span style="font-size:24px;display:inline;line-height:130%;text-indent:0px"><span style="color:blue;"  class="qhm-deco">' . $mtenpo['telno'] . '</span></span><br />※店舗直通</p>';
+
+	$output .= '<h3>営業時間</h3>';
+	$output .= '<p><span style="font-size:20px;color:brown;background-color:inherit;"  class="qhm-deco">' .  $mtenpo['businesshours'] . '</span><br />';
+	$output .= '先生により時間が異なりますので、スケジュールを確認してくださいね。<br />(最終受付 閉店時間の30分前（要相談）)</p>';
+
+	$output .= '<h3>定休日</h3>';
+	$output .= '<p>不定期</p>';
+
+	$output .= '<h3>鑑定料金</h3>';
+	if ($mtenpo['chokuei'])
+		$output .= '<p>10分あたり料金は先生により異なります。</p>';
+	else $output .= '<p>提携店に準拠します。</p>';
+	//if($mtenpo['chokuei'])　{
+
+
+
+	$output .= '</div>';
+	$output .= '<h3>アクセスマップ</h3>';
+	$output .= '<iframe src="' . $mtenpo['map'] . '" width="100%" height="400" frameborder="0" style="border:0" allowfullscreen></iframe>';
+
+	$output .= '<h3>簡単道案内</h3>';
+	$output .= $mtenpo['emap'];
+
+	#道案内を読み込んでる
+	$sql = 'SELECT DISTINCT Mdirection.sentence, Mdirection.oder ';
+	$sql .= ' FROM mdirections AS Mdirection ';
+	$sql .= ' WHERE Mdirection.mtenpo_id = ' . $id;
+
+	$wk_Mdirection = mysqli_query($link, $sql);
+
+	if (!empty($wk_Mdirection)) {
+		$output .= '<h3>' . $mtenpo['tenponame'] . ' への詳細ＭＡＰ</h3>';
+		while ($Mdirection = mysqli_fetch_assoc($wk_Mdirection)) {
+			$output .= '<div class="tenpo_annai_photo">';
+			$img = sprintf("%s%s%d%s", $stenpo_id, "_navi_", $Mdirection['oder'], '.jpg');
+			$output .=  '<img src="' . USER_IMG . $img . '" alt=" 道案内' . $Mdirection['oder'] . '">';
+			$output .= '<p>' . $Mdirection['sentence'] . '</p></div>';
+		}
+	}
+	if (is_null($sub)) {
+		$output .= '<h2>出演占い師一覧</h2>';
+		$output .= mkanteishi_view($id) . '<p></p>';
+
+		$output .= cal_view($id) . '<p></p>';
+
+		$output .= Tfeedback_view($id);
+	}
+	$output .= '</div>';
+	return $output;
+}
+
+function mtenpo_view($id = null, $sub = null)
+{
+	$link = mysqli_connect(SEVER, USER_ID, USER_PASS, USER_DB);
+	mysqli_set_charset($link, USER_CHATSET);
+	//mysqli_select_db(USER_DB, $link );
+
+	$sql = 'SELECT DISTINCT  tenponame, address, linkmap, businesshours, map, info, emap, url, telno, chokuei';
+	$sql .= ' FROM mtenpos';
+	$sql .= ' WHERE id= ' . $id;
+
+	$data = mysqli_query($link, $sql);
+	$mtenpo = mysqli_fetch_assoc($data);
+	if ($sub == '') $sub = NULL;
+	$stenpo_id = sprintf("%04d", $id);
+
+	$output .= '<section class="sub_container"><h2>店舗のご紹介<span>Store introduction</span></h2></section>';
+
+
+	$output .= '<div class="store_inside_container">';
+	$output .= '<section class="content">';
+	$output .= '<h3 class="normal">店内の様子</h3>';
+	$output .= '<ul class="store_inside_inner">';
+	$wk = USER_IMG;
+	// 存在するか調べたいファイルへのパ
+	for ($i = 1;; $i++) {
+		$path = USER_IMG4 . $stenpo_id . '_photo_' . $i . '.jpg';
+		//var_dump($path);
+		if (! file_exists($path))
+			break;
+		$output .= '<li>';
+		$output .=  "<img src='{$wk}{$stenpo_id}_photo_{$i}.jpg' alt='{$mtenpo['tenponame']}'  title='{$mtenpo['tenponame']}' >";
+		$output .= '</li>';
+	}
+
+
+	$output .= '</ul></section></div>';
+
+	$output .= '<div class="store_info_container"><div class="store_info_inner"><section class="content">';
+	$output .= '<h4>';
+	if ($mtenpo['chokuei'])
+		$output .= '占いハートフル　';
+	$output .= $mtenpo['tenponame'] . "</h4>";
+
+	$output .= '<h3>所在地</h3>';
+	$output .= '<p>' . $mtenpo['address'] . '<br />';
+	$output .= '<a href="' .  $mtenpo['linkmap'] . '" target="_blank">＞google mapで見る</a></p>';
+	$output .= '<h3>TEL</h3>';
+	$output .= '<p><span style="font-size:24px;display:inline;line-height:130%;text-indent:0px"><span style="color:blue;"  class="qhm-deco">' . $mtenpo['telno'] . '</span></span><br />※店舗直通</p>';
+
+	$output .= '<h3>営業時間</h3>';
+	$output .= '<p><span style="font-size:20px;color:brown;background-color:inherit;"  class="qhm-deco">' .  $mtenpo['businesshours'] . '</span><br />';
+	$output .= '先生により時間が異なりますので、スケジュールを確認してくださいね。<br />(最終受付 閉店時間の30分前（要相談）)</p>';
+
+	$output .= '<h3>定休日</h3>';
+	$output .= '<p>不定期</p>';
+
+	$output .= '<h3>鑑定料金</h3>';
+	if ($mtenpo['chokuei'])
+		$output .= '<p>10分あたり料金は先生により異なります。</p>';
+	else $output .= '<p>提携店に準拠します。</p>';
+	//if($mtenpo['chokuei'])　{
+
+
+	$output .= '<h3>アクセスマップ</h3>';
+	$output .= '<iframe src="' . $mtenpo['map'] . '" width="100%" height="400" frameborder="0" style="border:0" allowfullscreen></iframe>';
+
+	$output .= '<h3>簡単道案内</h3>';
+	$output .= $mtenpo['emap'];
+
+	#道案内を読み込んでる
+	$sql = 'SELECT DISTINCT Mdirection.sentence, Mdirection.oder ';
+	$sql .= ' FROM mdirections AS Mdirection ';
+	$sql .= ' WHERE Mdirection.mtenpo_id = ' . $id;
+
+	$wk_Mdirection = mysqli_query($link, $sql);
+
+	if (!empty($wk_Mdirection)) {
+		$output .= '<h3>' . $mtenpo['tenponame'] . ' への詳細ＭＡＰ</h3>';
+		$output .= '<div class="tenpo_annai_area">';
+		while ($Mdirection = mysqli_fetch_assoc($wk_Mdirection)) {
+			$output .= '<div class="tenpo_annai_photo">';
+			$img = sprintf("%s%s%d%s", $stenpo_id, "_navi_", $Mdirection['oder'], '.jpg');
+			$output .=  '<img src="' . USER_IMG . $img . '" alt=" 道案内' . $Mdirection['oder'] . '">';
+			$output .= '<p>' . $Mdirection['sentence'] . '</p></div>';
+		}
+		$output .= '</div><div class="clearfloat"></div>';
+	}
+
+	$output .= '</section></div></div>';
+	/*
+	if(is_null($sub)) {
+	$output .= '<div class="bg_gradation">';
+	$output .= '<div class="soothsayer">';
+	$output .= '<section class="content">';
+		$output .= '<h2>出演占い師一覧</h2>';
+		$output .= mkanteishi_view($id) . '<p></p>';
+	$output .= '</section></div></div>';
+		$output.= cal_view($id) . '<p></p>';
+
+		$output.= Tfeedback_view($id);
+	}
+	*/
+	return $output;
+}
+
+function mkanteishi_view($id = null, $tel = NULL, $new = NULL, $pname = NULL, $kbn = NULL)
+{
+	//	(telに店舗番号入ってくる)
+	$link = mysqli_connect(SEVER, USER_ID, USER_PASS, USER_DB);
+	mysqli_set_charset($link, USER_CHATSET);
+	//var_dump("AAA" . $id ."   " . $tel . "</br>");
+
+	$sql =  'SELECT id, name From mtankas ORDER BY id';
+	$data = mysqli_query($link, $sql);
+
+	while ($wk = mysqli_fetch_assoc($data))
+		$tanka[$wk['id']] = $wk['name'];
+
+	//mysqli_select_db(USER_DB, $link );
+	if ($tel) {
+		$sql = "SELECT DISTINCT Mtenpo.id FROM mtenpos as Mtenpo WHERE Mtenpo.chokuei = 1";
+		$mtenpos = mysqli_query($link, $sql);
+		$tenpo = ' AND Mcast.mtenpo_id in';
+		$wk = '(';
+		while ($data = mysqli_fetch_assoc($mtenpos)) {
+			$tenpo .= $wk;
+			$tenpo .= $data['id'];
+			$wk = ', ';
+		}
+		$tenpo .= ')';
+	}
+
+	$week = array("日", "月", "火", "水", "木", "金", "土");
+
+	$sq2 = NULL;
+	$tenponame = array('name' => '', 'id' => null, 'explanation' => '');
+	$wk_name = "出演の先生たち";
+
+	if (is_null($pname) and (is_numeric($id))) {
+		$sq2 = "SELECT tenponame as name from mtenpos WHERE id = {$id}";
+		$wk_name = "出演の先生たち";
+	} elseif (!is_null($pname)) {
+		switch ($kbn) {
+			case '1':
+				$sq2 = "SELECT id ,name  from mtankas WHERE pname = '{$pname}'";
+				$wk_name = "の先生たち";
+				break;
+			case '2':
+				$sq2 = "SELECT id, name, explanation from mfortunetellings WHERE pname = '{$pname}'";
+				$wk_name = "ができる先生たち";
+				break;
+			case '3':
+				$sq2 = "SELECT id, name from mconsultations WHERE pname = '{$pname}'";
+				$wk_name = "相談が得意な先生たち";
+				break;
+		}
+	}
+
+	if (!is_null($sq2)) {
+		$data = mysqli_query($link, $sq2);
+		if ($data)
+			$tenponame = mysqli_fetch_assoc($data);
+	}
+
+	switch ($kbn) {
+		case '1':
+			$id_sql = " AND mtankataimen_id = {$tenponame['id']} AND mpost_id < 100";
+			break;
+		case '2':
+			$id_sql = " AND (mfortunetelling_id = {$tenponame['id']} or mfortunetelling2_id = {$tenponame['id']} or mfortunetelling3_id = {$tenponame['id']} or mfortunetelling4_id = {$tenponame['id']} ) AND mpost_id < 100";
+			break;
+		case '3':
+			$id_sql = " AND (mconsultation_id = {$tenponame['id']} or mconsultation2_id = {$tenponame['id']} or mconsultation3_id = {$tenponame['id']} or mconsultation4_id = {$tenponame['id']} or mconsultation5_id = {$tenponame['id']} or mconsultation6_id = {$tenponame['id']} or mconsultation7_id = {$tenponame['id']}  or mconsultation8_id = {$tenponame['id']}) AND mpost_id < 100";
+			break;
+		default:
+			$id_sql = null;
+	}
+
+
+	$output = NULL;
+	$sql = 'SELECT DISTINCT Mkanteishi.name, Mkanteishi.name, Mkanteishi.yomigana,Mkanteishi.pr_senjitsut, Mkanteishi.therapiest, Mkanteishi.mtankatel_id, Mkanteishi.mtankataimen_id,Mcast.mshutuen_id, Mcast.mtenpo_id, Mkanteishi.shasin,  Mkanteishi.id ,Mshutuen.img, Mshutuen.name as Mname, Mshutuen2.img as M2img, Mshutuen2.name as M2name ';
+	$sql .= ' FROM mkanteishis AS Mkanteishi, mshutuens as Mshutuen, mshutuens as Mshutuen2, mcast AS Mcast ';
+	if (!is_null($id)) $sql .= ' , mshutsuenday AS Mshutsuenday ';
+	//		$sql .= ' FROM mkanteishis AS Mkanteishi, mshutsuenday AS Mshutsuenday, mshutuens as Mshutuen, mshutuens as Mshutuen2, mcast AS Mcast ';
+	$sql .= ' WHERE Mkanteishi.id <> 5 ';
+	$sql .= ' AND Mshutuen.id = Mcast.mshutuen_id ';
+	$sql .= ' AND Mshutuen2.id = Mkanteishi.mshutuen_id ';
+	if (!is_null($id)) $sql .= ' AND Mshutsuenday.mkanteishi_id = Mkanteishi.id ';
+	$sql .= ' AND Mcast.mdivision_id = 1 ';
+	$sql .= ' AND Mkanteishi.delflg = 0 ';
+	$sql .= ' AND Mkanteishi.id = Mcast.mkanteishi_id ';
+	$sql .= $id_sql;
+
+	if (is_numeric($id))
+		$sql .= ' AND Mshutsuenday.mtenpo_id = ' . $id;
+	else if (! is_null($tel))
+		$sql .= ' AND Mshutsuenday.mtenpo_id = ' . $tel;
+
+	//var_dump($tel　. "</br></br></br>");
+
+	switch ($id) {
+		case 'tel':
+			$sql .= ' AND Mkanteishi.isisflg = 1';
+			$wk_name = "時間外リモート鑑定可能な先生たち";
+			break;
+		case 'chat':
+			$sql .= ' AND Mkanteishi.mailflg = 1';
+			$wk_name = "チャット鑑定可能な先生たち";
+			break;
+	}
+
+	//var_dump($id, "<br>");
+	//, $sql, "<br>");
+
+
+	$sql .= ' ORDER BY Mshutuen.oder, Mkanteishi.mpost_id , Mkanteishi.mtankataimen_id DESC, Mkanteishi.id ';
+	//	var_dump($sql);
+	$Mkanteishis = mysqli_query($link, $sql);
+	//var_dump($sql . "<br>");
+	$date = new DateTime('now');
+	//echo $date->format('Y年m月d日 H時i分s秒');
+	$output = NULL;
+	if ($new)
+		$output .= '<div class="cards">';
+	else {
+		//var_dump($wk_name);
+		$output .= '<div class="bg_gradation">';
+		$output .= '<div class="soothsayer">';
+		$output .= '<section class="content">';
+		$output .=  "<h2 class='under_v'>{$tenponame['name']}{$wk_name}</h2>";
+		if ($kbn == 2) $output .= "<p style='color: azure'>{$tenponame['explanation']}</p>";
+
+		$output .=  '<ul class="soothsayer_list">';
+		$user_url = USER_URL;
+		$user_img3 = USER_IMG3;
+		$user_img2 = USER_IMG2;
+	}
+	//var_dump($wk_name); //nakomi
+
+	while ($Mkanteishi = mysqli_fetch_assoc($Mkanteishis)) {
+		if ($new) {
+			$sql_day = "SELECT workdate, weekday, mtimes1.name as name, mtimes2.name as name2 FROM eworkdays , mtimes as mtimes1, mtimes as mtimes2 WHERE mtime_id = mtimes1.id and mtime2_id = mtimes2.id and  holiday_flg = 0 and `mkanteishi_id` = {$Mkanteishi['id']} AND workdate >= '{$date->format('Y-m-d')}'  ORDER by workdate LIMIT 2";
+			$Days = mysqli_query($link, $sql_day);
+
+			while ($Day = mysqli_fetch_assoc($Days)) {
+				if ($Day['workdate'] == $date->format('Y-m-d'))
+					if ($Day['name2'] <  $date->format('Hi'))
+						continue;
+				break;
+			}
+
+			//$image = base64_encode($Mkanteishi['shasin']);
+			$alt =  $Mkanteishi['name'];
+			//var_dump($alt); //nakomi
+
+			$output .= '<li>';
+			$output .= '<a href="' . USER_URL . 'Mkanteishis/view/' . $Mkanteishi['mkanteishi_id'] . '/' . TENPO_ID . '/"target="_kanteishi">';
+			$wk_str = sprintf("%04d", $Mkanteishi['mkanteishi_id']);
+
+			$time = time();
+			$output .= '<img src="' . USER_IMG3 . $wk_str . '.jpg?v=' . $time . '" alt="' . $alt . '">';
+			//nakomi		
+			$output .= '<a class="cards__item card" href="' . USER_URL . 'Mkanteishis/view/' . $Mkanteishi['id'] . '/51/">';
+			$output .= '<div class="card__header">';
+			$output .= '<div class="card__img">';
+			//nakomi
+			$output .= '<img src="' . USER_IMG3 . $wk_str . '.jpg?v=' . $time . '" alt="' . $alt . '">';
+
+			// $output .= "<img src='data:image/jpeg;base64,${image}' alt= ${alt}  /></div>";
+			$output .= '<div class="card__detail">';
+			$output .= '<div class="card__title"><span>' . h($Mkanteishi['name']) . '先生</span>' . h($Mkanteishi['yomigana']) . '</div>';
+			$output .= '<ul class="card__uranai_typeList">';
+			$output .= '<li class="icon-tel">' . $tanka[$Mkanteishi['mtankatel_id']] . '</li>';
+			//$output .= '<li class="icon-zoom">　' . $tanka[$Mkanteishi['mtankatel_id']] . '</li>';
+			$output .= '</ul>';
+			$output .= '<div class="card__next">';
+			if (isset($Day['workdate'])) {
+				$wkdate = date('n／j', strtotime($Day['workdate']));
+				$wkdate .= '(' . $week[$Day['weekday']] . ')';
+				$wktime = $Day['name'] . "～" . $Day['name2'];
+				$output .=  '出演予定' . mb_convert_kana($wkdate, 'N');
+				$output .=  '</br>';
+				$output .=  mb_convert_kana($wktime, 'N');
+			} else $output .= '次回出演予定：未定';
+			//$output .= '<li>4/6 18:00〜23:00</li>';
+			//$output .= '</strong>';
+			$output .= '</div></div>';
+			$output .= '<p class="card__btn"><img src="' .	USER_IMG2 .  $Mkanteishi['img'] . '"></p>';
+			$output .= '<div class="card__excerpt">' . $Mkanteishi['pr_senjitsut'] . '</div></div> </a>';
+		} else {
+			//var_dump($Mkanteishi);
+			if (($Mkanteishi['mtenpo_id'] <> $id) and (!is_null($id))) {
+				$Mkanteishi['img'] = $Mkanteishi['M2img'];
+				$Mkanteishi['Mname'] = $Mkanteishi['M2name'];
+			}
+			$output .= "<li>";
+			if ($id != TENPO_ID)
+				$output .= "<a href='{$user_url}Mkanteishis/view/{$Mkanteishi['id']}/' target='_self'>";
+			else $output .= "<a href='{$user_url}Mkanteishis/view/{$Mkanteishi['id']}/{$id}/' target='_self'>";
+
+			$wk_str = sprintf("%04d", $Mkanteishi["id"]);
+			//nakomi
+			$alt =  $Mkanteishi['name'];
+			$time = time();
+			$output .= '<img src="' . USER_IMG3 . $wk_str . '.jpg?v=' . $time . '" alt="' . $alt . '">';
+
+			//$output .= "<img src='{$user_img3}{$wk_str}.jpg' alt='{$alt}'>";
+			if (is_null($Mkanteishi["yomigana"]) || empty($Mkanteishi["yomigana"]))
+				$Mkanteishi["yomigana"] = "　";
+			$output .= "<h4 class='Mincho'>{$Mkanteishi['name']}先生<span>{$Mkanteishi["yomigana"]}</span></h4>";
+			$output .= "<img src='{$user_img2}{$Mkanteishi["img"]}' width='150' alt='{$Mkanteishi["Mname"]}'></a>";
+			$output .= "</li>";
+		}
+	}
+	if (!$new)
+		$output .= "</ul></section></div></div></div>";
+
+	return $output;
+}
+
+function mkanteishi_view2($id = null, $tel = NULL, $new = NULL)
+{
+	$link = mysqli_connect(SEVER, USER_ID, USER_PASS, USER_DB);
+	mysqli_set_charset($link, USER_CHATSET);
+
+	$sql =  'SELECT id, name From mtankas ORDER BY id';
+	$data = mysqli_query($link, $sql);
+
+	while ($wk = mysqli_fetch_assoc($data)) {
+		$tanka[$wk['id']] = $wk['name'];
+	};
+	//mysqli_select_db(USER_DB, $link );
+	if ($tel) {
+		$sql = "SELECT DISTINCT Mtenpo.id FROM mtenpos as Mtenpo WHERE Mtenpo.chokuei = 1";
+		$mtenpos = mysqli_query($link, $sql);
+		$tenpo = ' AND Mcast.mtenpo_id in';
+		$wk = '(';
+		while ($data = mysqli_fetch_assoc($mtenpos)) {
+			$tenpo .= $wk;
+			$tenpo .= $data['id'];
+			$wk = ', ';
+		}
+		$tenpo .= ')';
+	}
+
+	$week = array("日", "月", "火", "水", "木", "金", "土");
+	$output = NULL;
+	$sql = 'SELECT DISTINCT Mkanteishi.name, Mkanteishi.yomigana,Mkanteishi.pr_senjitsut, Mkanteishi.therapiest, Mkanteishi.mtankatel_id, Mkanteishi.mtankataimen_id,Mcast.mshutuen_id, Mcast.mtenpo_id, Mkanteishi.shasin,  Mkanteishi.id ,Mshutuen.img, Mshutuen.name as Mname, Mshutuen2.img as M2img, Mshutuen2.name as M2name ';
+	$sql .= ' FROM mkanteishis AS Mkanteishi, mshutuens as Mshutuen, mshutuens as Mshutuen2, mcast AS Mcast ';
+	if (!is_null($id)) $sql .= ' , mshutsuenday AS Mshutsuenday ';
+	//		$sql .= ' FROM mkanteishis AS Mkanteishi, mshutsuenday AS Mshutsuenday, mshutuens as Mshutuen, mshutuens as Mshutuen2, mcast AS Mcast ';
+	$sql .= ' WHERE (Mkanteishi.delflg = 0) ';
+	$sql .= ' AND Mshutuen.id = Mcast.mshutuen_id ';
+	$sql .= ' AND Mshutuen2.id = Mkanteishi.mshutuen_id ';
+	if (!is_null($id)) $sql .= ' AND Mshutsuenday.mkanteishi_id = Mkanteishi.id ';
+	$sql .= ' AND (Mcast.mdivision_id = 1) ';
+	$sql .= ' AND Mkanteishi.id = Mcast.mkanteishi_id ';
+	if (!is_null($id))  $sql .= 'AND Mshutsuenday.mtenpo_id = ' . $id;
+
+	$sql .= ' ORDER BY Mshutuen.oder, Mkanteishi.mpost_id , Mkanteishi.mtankataimen_id DESC, Mkanteishi.id ';
+	$Mkanteishis = mysqli_query($link, $sql);
+
+	$date = new DateTime('now');
+	//echo $date->format('Y年m月d日 H時i分s秒');
+
+	if ($new) $output .= '<div class="cards">';
+
+	while ($Mkanteishi = mysqli_fetch_assoc($Mkanteishis)) {
+		if ($new) {
+
+			$sql_day = "SELECT workdate, weekday, mtimes1.name as name, mtimes2.name as name2 FROM `eworkdays` , mtimes as mtimes1, mtimes as mtimes2 WHERE mtime_id = mtimes1.id and mtime2_id = mtimes2.id and  holiday_flg = 0 and `mkanteishi_id` = " . $Mkanteishi['id'] . " AND `workdate` >=  '" . $date->format('Y-m-d') . "'  ORDER by workdate LIMIT 2";
+			$Days = mysqli_query($link, $sql_day);
+
+			while ($Day = mysqli_fetch_assoc($Days)) {
+
+				if ($Day['workdate'] == $date->format('Y-m-d'))
+					if ($Day['name2'] <  $date->format('Hi'))
+						continue;
+				break;
+			}
+			//var_dump($Day);
+
+			//$image = base64_encode($Mkanteishi['shasin']);
+			$alt =  $Mkanteishi['name'];
+			$output .= '<a class="cards__item card" href="' . USER_URL . 'Mkanteishis/view/' . $Mkanteishi['id'] . '/51/">';
+			$output .= '<div class="card__header">';
+			$output .= '<div class="card__img">';
+			$wk_str = sprintf("%04d", $Mkanteishi['mkanteishi_id']);
+			$time = time();
+			$output .= '<img src="' . USER_IMG3 . $wk_str . '.jpg?v=' . $time . '" alt="' . $alt . '">';
+			//nakomi
+			//$output .= "<img src='data:image/jpeg;base64,${image}' alt= ${alt}  /></div>";
+			$output .= '<div class="card__detail">';
+			$output .= '<div class="card__title"><span>' . h($Mkanteishi['name']) . '先生</span>' . h($Mkanteishi['yomigana']) . '</div>';
+			$output .= '<ul class="card__uranai_typeList">';
+			$output .= '<li class="icon-tel">' . $tanka[$Mkanteishi['mtankatel_id']] . '</li>';
+			//$output .= '<li class="icon-zoom">　' . $tanka[$Mkanteishi['mtankatel_id']] . '</li>';
+			$output .= '</ul>';
+			$output .= '<div class="card__next">';
+			if (isset($Day['workdate'])) {
+				$wkdate = date('n／j', strtotime($Day['workdate']));
+				$wkdate .= '(' . $week[$Day['weekday']] . ')';
+				$wktime = $Day['name'] . "～" . $Day['name2'];
+				$output .=  '出演予定' . mb_convert_kana($wkdate, 'N');
+				$output .=  '</br>';
+				$output .=  mb_convert_kana($wktime, 'N');
+			} else $output .= '次回出演予定：未定';
+			//$output .= '<li>4/6 18:00〜23:00</li>';
+			//$output .= '</strong>';
+			$output .= '</div></div>';
+			$output .= '<p class="card__btn"><img src="' . USER_IMG2 .  $Mkanteishi['img'] . '"></p>';
+			$output .= '<div class="card__excerpt">' . $Mkanteishi['pr_senjitsut'] . '</div></div> </a>';
+		} else {
+			if (($Mkanteishi['mtenpo_id'] <> $id) and (!is_null($id))) {
+
+				$Mkanteishi['img'] = $Mkanteishi['M2img'];
+				$Mkanteishi['Mname'] = $Mkanteishi['M2name'];
+			}
+
+			$output .= '<div class="uranai_box">';
+
+			$output .= "<a href='" . USER_URL . "Mkanteishis/view/{$id}/' target='_self''>";
+			$output .= '<div class="uranai_photo">';
+
+			$alt =  $Mkanteishi['name'];
+			$output .= '<a class="cards__item card" href="' . USER_URL . 'Mkanteishis/view/' . $Mkanteishi['id'] . '/51/">';
+			$output .= '<div class="card__header">';
+			$output .= '<div class="card__img">';
+			//$output .= "<img src='data:image/jpeg;base64,${image}' alt= ${alt}  /></div>";
+			$output .= '<div class="card__detail">';
+			$output .= '<div class="card__title"><span>' . h($Mkanteishi['name']) . '先生</span>' . h($Mkanteishi['yomigana']) . '</div>';
+			$output .= '<ul class="card__uranai_typeList">';
+			$output .= '<li class="icon-tel">' . $tanka[$Mkanteishi['mtankatel_id']] . '</li>';
+			//$output .= '<li class="icon-zoom">　' . $tanka[$Mkanteishi['mtankatel_id']] . '</li>';
+
+			$output .= '<div class="name_nomal">';
+			$output .= '<span class="teacher_name">' . h($Mkanteishi['name']) . "先生</span>";
+			$output .= '<div class="teacher_furi">' . h($Mkanteishi['yomigana']) . "</div>";
+			$output .= '</div>';
+			$output .= '<img src="' . USER_IMG . $Mkanteishi['img'] . '" alt="' . $Mkanteishi['Mname'] . '">';
+			$output .= '<div class="tel_markarea">';
+			if ($tel & $Mkanteishi['mtenpo_id'] != 51) $output .= "店舗出演中 ";
+
+			$output .= '</div></a></div>';
+		}
+	}
+	return $output;
+}
+
+function banner_view($id = null)
+{
+
+
+	//if(is_null($id))
+	//	$id =51;
+	$output = NULL;
+
+	$link = mysqli_connect(SEVER, USER_ID, USER_PASS, USER_DB);
+	mysqli_set_charset($link, USER_CHATSET);
+	//mysqli_select_db(USER_DB, $link );
+	$sql = 'Select twitteraccount, tenponame from mtenpos Where id =' . $id . ' AND twitteraccount is not NULL';
+	$tws = mysqli_query($link, $sql);
+	while ($tw = mysqli_fetch_assoc($tws))
+		$output = '<h3>' . $tw['tenponame'] . 'のTwitter</h3><a class="twitter-timeline" data-width="320" data-height="500" data-chrome="nofooter noborders" data-dnt="true" href="https://twitter.com/' . $tw['twitteraccount'] . '?ref_src=twsrc%5Etfw"></a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>';
+
+	$output .= '<div class="sidebanner_mailm"><a href="https://uranai.heartf.com/Public/Mhusers/add2">メルマガ登録</a></div>';
+
+	$sql = 'Select * from mmediainformations   ';
+	if (!is_null($id))
+		$sql .= 'Where mtenpo_id in(0, ' . $id . ")";
+
+	$sql .= 'ORDER BY kbn, linkdate ASC';
+
+	$mds = mysqli_query($link, $sql);
+	$old_kbn = 0;
+	while ($md = mysqli_fetch_assoc($mds)) {
+
+		if ($old_kbn != $md['kbn']) {
+			if ($md['kbn'] == "1")
+				$output .= '<h4>ネット掲載情報</h4><div class="news_area"><ul class="list1 list-group">';
+			else {
+				if ($old_kbn != 0) $output .=  '</ul></div>';
+				$output .= '<h4>メディア掲載情報</h4><div class="news_area"><ul class="list1 list-group">';
+			}
+		}
+		$old_kbn = $md['kbn'];
+		$output .= '<li class="list-group-item">' . $md['contents'] . '</li>';
+	}
+
+
+	if ($old_kbn != 0) $output .=  '</ul></div>';
+
+	$output .= '<h3 id="content_3_2">当社運営サイト</h3>';
+
+	if (!is_null($id))
+		$output .= '<div class="sidebanner_heartf"><a href="https://uranai.heartf.com/">占いハートフル</a></div>';
+	$output .= '<div class="sidebanner_school"><a href="https://school.heartf.com/">ハートフルスクール</a></div>';
+
+	$output .= '<div class="sidebanner_hps"><a href="https://zense.heartf.com/">心理センター東京</a></div>';
+
+	if ($id != 73)
+		$output .= '<div class="sidebanner_jiyugaoka2"><a href="https://jiyugaoka2.uranai.heartf.com/">自由が丘南口</a></div>';
+
+	if ($id != 51)
+		$output .= '<div class="sidebanner_tel"><a href="https://tel.uranai.heartf.com/">リモート占い館</a></div>';
+	if ($id != 72)
+		$output .= '<div class="sidebanner_uenohirokouji"><a href="https://ueno2.uranai.heartf.com/">上野広小路店</a></div>';
+	if ($id != 67)
+		$output .= '<div class="sidebanner_asakusaekimae"><a href="https://asakusaekimae.uranai.heartf.com/">浅草駅前店</a></div>';
+	if ($id != 66)
+		$output .= '<div class="sidebanner_kanda"><a href="https://kanda.uranai.heartf.com/">神田店</a></div>';
+	if ($id != 60)
+		$output .= '<div class="sidebanner_asakusa"><a href="https://asakusa.uranai.heartf.com/">浅草店</a></div>';
+	if ($id != 38)
+		$output .= '<div class="sidebanner_ueno"><a href="https://ueno.uranai.heartf.com/">上野店</a></div>';
+	if ($id != 58)
+		$output .= '<div class="sidebanner_okachimachi"><a href="https://okachimachi.uranai.heartf.com/">御徒町店</a></div>';
+	if ($id != 28)
+		$output .= '<div class="sidebanner_ookubo"><a href="https://okubo.uranai.heartf.com/">新宿大久保店</a></div>';
+	if ($id != 53)
+		$output .= '<div class="sidebanner_jiyugaoka"><a href="https://jiyugaoka.uranai.heartf.com/">自由が丘店</a></div>';
+	if ($id != 4)
+		$output .= '<div class="sidebanner_isezaki"><a href="https://yokohama.uranai.heartf.com/">横浜伊勢佐木町店</a></div>';
+
+	return $output;
+}
+
+
+function banner_view2($id = null)
+{
+
+
+	//if(is_null($id))
+	//	$id =51;
+	$output = NULL;
+
+	$link = mysqli_connect(SEVER, USER_ID, USER_PASS, USER_DB);
+	mysqli_set_charset($link, USER_CHATSET);
+	//mysqli_select_db(USER_DB, $link );
+	$sql = 'Select twitteraccount, tenponame from mtenpos Where id =' . $id . ' AND twitteraccount is not NULL';
+	$tws = mysqli_query($link, $sql);
+	while ($tw = mysqli_fetch_assoc($tws))
+		$output = '<h3>' . $tw['tenponame'] . 'のTwitter</h3><a class="twitter-timeline" data-width="320" data-height="500" data-chrome="nofooter noborders" data-dnt="true" href="https://twitter.com/' . $tw['twitteraccount'] . '?ref_src=twsrc%5Etfw"></a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>';
+
+	$output .= <<<EOM
+	  <div class="footer__media">
+		<div class="footer__media__net">
+		  <h4>ネット掲載情報</h4>
+		  <ul class="media_netList">
+			<li><time class="netList__time">2019年4月22日</time>
+				<p><a href="https://denwauranai-kamisama.com" target="_blank">「電話占いの神様」</a>に<a href="https://denwauranai-kamisama.com/kanda/" target="_blank">「神田の当たる占い店」</a>として紹介されました。・</p>
+			  </li>
+			<li>
+				<time class="netList__time">2019年4月20日</time>
+				<p><a href="https://uranai-12.com/" target="_blank">「電話占い当たるちゃん」</a>に「<a href="https://uranai-12.com/heartf-kanda-interview/" target="_blank">占いハートフル</a>」が紹介されました。</p></li>
+		  </ul>
+		</div>
+		<div class="footer__media__tv">
+		  <h4>メディア掲載情報</h4>
+		  <ul class="media_netList">
+			<li>
+				<time class="netList__time">2019年1月23日</time>
+				<p>日テレ 一周回って知らない話SPでハートフルスクールと神田店がオンエアされました</p></li>
+			<li>
+				<time class="netList__time">2017年3月12日</time>
+				<p>上野店で占い体験と撮影が行われました。<br>
+				＜番組名＞テレビ東京 特捜警察ジャンポリス<br>
+				＜放送日＞4月1日朝10時～<br>
+				2016年9月29日(木) 24:10～25:10 TBSにてオンエアのテレビ番組「未知の世界に飛び込め！THE体感」内で、タレントの加藤諒さんがシンリセンター東京の催眠療法を体験します。<br>
+				＜番組名＞TBS「未知の世界に飛び込め！THE体感」<br>
+				＜放送日＞2016年9月29日(木)　24:10～25:10　OA</p>
+</li>
+		  </ul>
+		</div>
+	  </div>
+EOM;
+
+
+
+
+	$output .= '<h3>当社運営サイト</h3><ul class="operatingSiteList">';
+
+	if (!is_null($id))
+		$output .= '<li><a href="https://uranai.heartf.com/"><img src="/images/banner-uranai.png" alt="占いハートフル"></a></li>';
+	$output .= '<li><a href="https://school.heartf.com/"><img src="/images/banner-school.png" alt="ハートフルスクール"></a></li>';
+
+	$output .= '<li><a href="https://zense.heartf.com/"><img src="/images/banner-zense.png" alt="心理センター東京"></a></li>';
+
+	$output .= '</ul>';
+	return $output;
+}
+
+
+function elog_list2($kbn = NULL, $id = null)
+{
+
+
+	$link = mysqli_connect(SEVER, USER_ID, USER_PASS, USER_DB);
+	mysqli_set_charset($link, USER_CHATSET);
+	$output = NULL;
+	$output .= '<div class="news_container">';
+	$output .= '<div class="news_information">';
+	$output .= '<h3>最新情報</h3>';
+	$output .= '<ul>';
+
+	if (mysqli_connect_errno()) {
+		printf("Connect failed: %s\n", mysqli_connect_error());
+		exit();
+	}
+	$sql = "SELECT DISTINCT Elog.remarks, DATE_FORMAT(Elog.created, '%m/%d %H:%i') as created FROM elogs as Elog WHERE ";
+
+	if (!is_null($id))
+		$sql .= ' Elog.mtenpo_id = ' . $id;
+	else $sql .= ' Elog.delflg = 0';
+	$sql .= ' ORDER BY Elog.id DESC LIMIT 20';
+	$elogs = mysqli_query($link, $sql);
+	//	$Tfeedbacks = mysqli_query($link, $sql);
+
+
+	while ($data = mysqli_fetch_assoc($elogs)) {
+		$date = new DateTime($data['created']);
+
+		$output .= '<li>' . $date->format('m/d H:i') . ' ' . $data['remarks'] . '</li>';
+	}
+	$output .= '</ul></div>';
+	$output .= '<div class="news_information">';
+	$output .= '<h3>最新情報</h3>';
+	$output .= '<ul>';
+	//var_dump($kbn. "<br>" . $mtenpo_id);
+	//if($kbn == 1) {
+	$SQL = "SELECT  Eoshirase.word as word, Mkanteishi.name as name FROM eoshirase as Eoshirase, mkanteishis as Mkanteishi ";
+	$SQL .= " WHERE Eoshirase.mkanteishi_id = Mkanteishi.id AND Eoshirase.mdivision_id = 1";
+	$SQL .= ' AND Eoshirase.period >= DATE_FORMAT(now(),"%Y-%m-%D") ORDER BY  Eoshirase.id  DESC';
+	//}
+	//var_dump($SQL . "<br>" . $mtenpo_id);
+	//	if($kbn == 2) {
+	//var_dump($kbn. "<br>" . $mtenpo_id);
+
+	$SQL = "SELECT  Ecoshirase.sdate, Ecoshirase.word  FROM ecoshirases as Ecoshirase";
+	$SQL .= " WHERE Ecoshirase.mdivision_id = 1 AND (Ecoshirase.mtenpo_id = 1 OR ";
+	if (is_null($mtenpo_id))
+		$SQL .= " Ecoshirase.allflg = 1)";
+	else $SQL .= " Ecoshirase.mtenpo_id = " . $mtenpo_id . ")";
+	$SQL .= ' AND Ecoshirase.period >= DATE_FORMAT(now(),"%Y-%m-%D") ORDER BY  Ecoshirase.sdate  DESC';
+	//		}
+	//var_dump($kbn. "<br>" .$SQL);
+	if ($kbn == 3) {
+
+		$SQL = "SELECT  Ecoshirase.sdate, Ecoshirase.word  FROM ecoshirasem as Ecoshirase";
+		$SQL .= " WHERE Ecoshirase.mdivision_id = 1 AND Ecoshirase.mtenpo_id = " . $mtenpo_id;
+		$SQL .= ' AND Ecoshirase.period >= DATE_FORMAT(now(),"%Y-%m-%D") ORDER BY  Ecoshirase.sdate  DESC';
+	}
+
+	$data = mysqli_query($link, $SQL);
+	//$output = NULL;
+	//	if($kbn == 2 OR $kbn == 3) {
+	while ($ecoshirase = mysqli_fetch_assoc($data)) {
+
+		$output .= '<li><b>' .  substr($ecoshirase['sdate'], 5) . ' </b>';
+		//var_dump($ecoshirase['word']);
+		$output .=  $ecoshirase['word'];
+		$output .= '</li>';
+	}
+	$output .= '</ul></section></div></div>';
+	//}
+
+	mysqli_close($link);
+	return  $output;
+}
+
+
+
+function elog_view($id = null)
+{
+	//$link = mysqli_connect(SEVER, USER_ID, USER_PASS, USER_DB);
+	$link = mysqli_connect(SEVER, USER_ID, USER_PASS, USER_DB);
+	mysqli_set_charset($link, USER_CHATSET);
+	//mysqli_select_db(USER_DB, $link );
+	if (mysqli_connect_errno()) {
+		printf("Connect failed: %s\n", mysqli_connect_error());
+		exit();
+	}
+
+
+	$SQL = "SELECT Elog.remarks, DATE_FORMAT(Elog.created, '%m/%d %H:%i') as created FROM elogs as Elog WHERE Elog.delflg = 0";
+	$SQL .= ' AND Elog.created >= DATE_FORMAT(now(),"%Y-%m-%D")';
+
+	if (!is_null($id))
+		$SQL .= " AND Elog.mtenpo_id = " . $id;
+
+	$SQL .= ' ORDER BY Elog.created DESC LIMIT 20 ';
+	//var_dump($SQL);
+	$elogs = mysqli_query($link, $SQL);
+	//svar_dump($elogs );
+
+
+
+	$output .= '<div id="slide" class="ticker"><ul>';
+	while ($elog = mysqli_fetch_assoc($elogs))
+		$output .= '<li><b>' .  substr($elog['created'], 5) . ' </b>' . $elog['remarks']  . '</li>';
+
+
+	$output .= '</ul></div>';
+
+	mysqli_close($link);
+
+	return  $output;
+}
+
+function elog_list($id = null)
+{
+	$link = mysqli_connect(SEVER, USER_ID, USER_PASS, USER_DB);
+	mysqli_set_charset($link, USER_CHATSET);
+	//mysqli_select_db(USER_DB, $link );
+
+	$sql = "SELECT DISTINCT Elog.remarks, DATE_FORMAT(Elog.created, '%m/%d %H:%i') as created FROM elogs as Elog WHERE ";
+
+	if (!is_null($id))
+		$sql .= ' Elog.mtenpo_id = ' . $id;
+	else $sql .= ' Elog.delflg = 0';
+	$sql .= ' ORDER BY Elog.id DESC LIMIT 20';
+	$elogs = mysqli_query($link, $sql);
+	$output = '<div id="slide" class="kousin_area"><ul>';
+	while ($data = mysqli_fetch_assoc($elogs)) {
+		$date = new DateTime($data['created']);
+		$output .= '<li>' . $date->format('m/d H:i') . ' ' . $data['remarks'] . '</li>';
+	}
+	$output .= '</ul></div>';
+	mysqli_close($link);
+	return $output;
+}
+
+function select_area($kbn)
+{
+
+	$link = mysqli_connect(SEVER, USER_ID, USER_PASS, USER_DB);
+	mysqli_set_charset($link, USER_CHATSET);
+
+	$output = NULL;
+	$output .= "<div class='clearfloat'></div>";
+	$output .= "<section class='content accordion'>";
+	if (is_null($kbn)) $output .= "<h2 class='Mincho title'>他の目的で探す<span>Search</span></h2>";
+	else $output .= "<h2 class='Mincho title'>目的で探す<span>Search</span></h2><div class='accordion__container'>";
+
+	$output .=	"<h3 class='accordion__title js-accordion-title'>鑑定料金別で探す</h3>	<ul class='judgment accordion__content'>";
+	//	$output .=	'<h3 class="accordion__title js-accordion-title">鑑定料金別で探す</h3>	<ul class="judgment accordion__content">';
+	$sql = "SELECT id, name, pname  FROM mtankas  WHERE taimenflg = 1  and id <> 0 ORDER BY id";
+	$datas = mysqli_query($link, $sql);
+	while ($data = mysqli_fetch_assoc($datas))
+		$output .=	"<li><a href='/listoffortunefellers/{$data['pname']}' class='Mincho'>{$data['name']}</a></li>";
+	$output .=  "</ul>";
+	$output .= "<h3 class='accordion__title js-accordion-title'>占術別で探す</h3>";
+	$output .= "<ul class='fortune-telling accordion__content'>";
+	$sql = "SELECT id, name, pname  FROM mfortunetellings WHERE del_flg  = 0  ORDER BY orderno";
+	$datas = mysqli_query($link, $sql);
+
+	while ($data = mysqli_fetch_assoc($datas))
+		$output .=	"<li><a href='/listoffortunefellers/{$data['pname']}' class='Mincho'>{$data['name']}</a></li>";
+
+	$output .=  "</ul>";
+	$output .= "<h3 class='accordion__title js-accordion-title'>相談内容で探す</h3>";
+	$output .= "<ul class='consultation accordion__content'>";
+	$sql = "SELECT id, name, pname  FROM mconsultations WHERE del_flg  = 0  ORDER BY orderno";
+	$datas = mysqli_query($link, $sql);
+	while ($data = mysqli_fetch_assoc($datas)) {
+		$output .=	"<li><a href='/listoffortunefellers/{$data['pname']}' class='Mincho'>{$data['name']}</a></li>";
+	}
+	$output .= "</ul></div></section>";
+
+	mysqli_close($link);
+	return $output;
+}
+function tw_area($id = null)
+{
+	$link = mysqli_connect(SEVER, USER_ID, USER_PASS, USER_DB);
+	mysqli_set_charset($link, USER_CHATSET);
+
+	if (mysqli_connect_errno()) {
+		printf("Connect failed: %s\n", mysqli_connect_error());
+		exit();
+	}
+
+
+
+	$sq2 = "SELECT twitteraccount from mtenpos WHERE id = {$id}";
+	$data = mysqli_query($link, $sq2);
+	$twitteraccount = mysqli_fetch_assoc($data);
+	$wk_tw = $twitteraccount["twitteraccount"];
+
+	$output =  "<div class='twitter_inner'><a class='twitter-timeline' data-height='380' href='https://twitter.com/
+	{$wk_tw}?ref_src=twsrc%5Etfw'>Tweets by {$wk_tw}</a> <script async src='https://platform.twitter.com/widgets.js' charset='utf-8'></script></div>";
+	mysqli_close($link);
+	return $output;
+}
+
+
+
+
+function blog_view3($id = null)
+{
+	//自分の環境に合わせてください、相対パスでも絶対パスでもOKです。
+	//equire_once('/home/heartf/heartf.com/public_html/wp-load.php');
+	//var_dump(dirname(__FILE__) . '/../../wp-load.php'); exit;
+	require_once(dirname(__FILE__) . '/../../wp-load.php');
+	//require_once('https://heartf.com/wp-load.php');
+
+	//ネットワーク対応のサイト一覧を取得する。
+	$args = array('public' => 1, 'offset' => 1);
+	$my_blogs = wp_get_sites($args);
+	//var_dump($my_blogs); exit;
+	//$wkdate = date('Y/m/d/', strtotime("- 30 day"));
+	//最新記事の５件を取得する
+	$args = array('posts_per_page' => 5);
+	//var_dump($my_blogs);exit;
+	//$wkblog
+	$wkblog = array();
+	$wkid = sprintf("%04d", $id);
+	var_dump($wkid);
+	//ネットワーク対応のサイト分だけLoopする。
+	foreach ($my_blogs as $blog) {
+		//var_dump($my_blogs);
+		if ($wkid != intval(substr($blog['path'], 2, 4))) continue;
+		//該当ブログに切り替える
+		switch_to_blog($blog['blog_id']);
+		//記事を取得する
+		$myposts = get_posts($args);
+		//記事が無ければ次のサイトを読みに行く
+		if (empty($myposts)) continue;
+		//90日以内に更新があったBlogだけを表示する。
+		foreach ($myposts as $post) {
+			setup_postdata($post);
+			if (strtotime(get_the_date('Y/m/d/H:i:s')) >= strtotime(date('Y/m/d/H:i:s', strtotime("- 90 day"))))
+				$wkflg = TRUE;
+			else $wkflg = FALSE;
+			break;
+		}
+
+		if (! $wkflg) continue;
+		$wkblog[strtotime(get_the_time('Y/m/d/H:i:s'))] = $blog['blog_id'];
+	}
+	//var_dump($wkblog);exit;
+
+	krsort($wkblog);
+
+	foreach ($wkblog as $value) {
+		switch_to_blog($value);
+		//ブログのタイトルを表示する。
+		//	bloginfo(name);
+		//記事を取得する
+		$myposts = get_posts($args);
+		//取得した記事の数だけLoopする
+		$output = '<div class="list_container">';
+		$output .= '<ul class="list slick2">';
+	}
+	foreach ($myposts as $post) {
+		//多分読んできたデータを構造化してる？？
+		setup_postdata($post);
+		//if(strtotime(get_the_time('Y/m/d/H:i:s')) < strtotime(date('Y/m/d/H:i:s', strtotime("- 60 day"))))
+		//break;
+		// アイキャッチ画像のIDを取得
+		$thumbnail_id = get_post_thumbnail_id();
+
+		// mediumサイズの画像内容を取得（引数にmediumをセット）
+		$eye_img = wp_get_attachment_image_src($thumbnail_id, 'full');
+
+		// 取得した画像URLにてイメージタグを出力
+		// 更にdata-aliasというHTML5のカスタムデータ属性を追加
+		$output .= "<li>";
+		$wk_ln = the_permalink();
+		$output .= "<a href='{$wk_ln}'> target='_self'>";
+		$output .= "<img src = '{$eye_img[0]}'>";
+		$wk_ln  = the_time('Y/m/d/');
+		$output .= "<span>{$wk_ln}</span>";
+		if (strtotime(get_the_time('Y/m/d/H:i:s')) > strtotime(date('Y/m/d/H:i:s', strtotime("- 5 day"))))
+			$output .= 	'<img src="https://uranai.heartf.com/swfu/d/new012_07.gif" alt="新着" title="1日以内に更新">';
+		$wk_ln  = the_title();
+		$output .= "<h4 class='Mincho'>{$wk_ln}</h4></a></li>";
+	}
+	$output .= "</div>";
+	restore_current_blog();
+	return $output;
+}
+
+
+function mtenpo_area_view()
+{
+
+	$link = mysqli_connect(SEVER, USER_ID, USER_PASS, USER_DB);
+	mysqli_set_charset($link, USER_CHATSET);
+	//mysqli_select_db(USER_DB, $link );
+
+	$sql = 'SELECT id, tenponame FROM mtenpos WHERE chokuei = 1 ORDER BY  weboder';
+
+	$data = mysqli_query($link, $sql);
+	$output = '<ul class="store_list-tab">';
+	$wk =  'class="select"';
+	$wk2 = NULL;
+	$output1 = '<a name="ulist" id="ulist"></a><dl class="u-list">';
+
+	while ($mtenpo = mysqli_fetch_assoc($data)) {
+		$output .= "<li {$wk}>{$mtenpo['tenponame']}</li>";
+
+		$output1 .= "<dt {$wk2}>";
+		$output1 .= '<div class="bg_gradation"><div class="soothsayer">';
+		$output1 .= mkanteishi_view($mtenpo['id']);
+		//$output1 .=	'<dt style="display:none;">';
+		$output1 .= "</div></div></dt>";
+		$wk = NULL;
+		$wk2 = "style='display:none;'";
+	}
+
+	$output .= '</ul>';
+	$output1 .= '</dl>';
+	//	var_dump($output1);
+	mysqli_close($link);
+
+	return $output . $output1;
+}
+
+
+function link_area_view()
+{
+	$link = mysqli_connect(SEVER, USER_ID, USER_PASS, USER_DB);
+	mysqli_set_charset($link, USER_CHATSET);
+	//mysqli_select_db(USER_DB, $link );
+
+	$sql = 'SELECT id, tenponame, domain FROM mtenpos WHERE chokuei = 1 and id <> 51 ORDER BY  id';
+	$data = mysqli_query($link, $sql);
+	$output = '<img src="images/border-topic-common.jpg" alt="ボーダー" class="boda">';
+	$output .= '<div class="bg_gradation"><h3 class="Mincho shopinfo_title">店舗のご案内</h3><ul class="slick1">';
+
+	while ($mtenpo = mysqli_fetch_assoc($data)) {
+		//var_dump($mtenpo['domain']);
+
+		$output .= '<li class="shop_card">';
+		$output .= "<a href='https://{$mtenpo['domain']}.uranai.heartf.com/index.php?StoreIntroduction'>";
+		$output .= "<img class='object-fit-img' src='images/tb-1{$mtenpo['id']}.jpg' alt='{$mtenpo['tenponame']}'>";
+		$output .= "<h4>{$mtenpo['tenponame']}</h4></a></li>";
+	}
+
+	$output .= "</ul></div>";
+
+	mysqli_close($link);
+	return $output;
+}
+
+
+
+function heartftime($f, $m)
+{
+	$h = floor($f / 100);
+	$i = str_pad(floor($f % 100 / 25 * 15), 2, "0");
+
+
+	$h2 = floor($m / 100);
+	$i2 = str_pad(floor($m % 100 / 25 * 15), 2, "0");
+
+
+	if ($f == 0) return "臨時";
+	//    return "";
+	return " {$h}:{$i}  - {$h2}:{$i2} ";
+}

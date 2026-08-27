@@ -1,0 +1,6 @@
+#suPHP_ConfigPath /home/mgm/sakurakensetsu.co.jp/xserver_php/
+#AddHandler x-httpd-php5 .php .phps .html
+AddHandler fcgid-script .html
+#AddHandler fcgid-script .php .phps
+#FCGIWrapper "/home/mgm/sakurakensetsu.co.jp/xserver_php/php-cgi" .php
+#FCGIWrapper "/home/mgm/sakurakensetsu.co.jp/xserver_php/php-cgi" .phps

@@ -1,0 +1,44 @@
+<?php
+/**
+ * Class User_Admin_Simplifier\Plugin
+ *
+ * @package User_Admin_Simplifier
+*/
+namespace User_Admin_Simplifier;
+
+/**
+ * Main plugin class.
+ *
+ * @since 2.0.0
+ */
+final class Plugin {
+	/**
+	 * The plugin main file path.
+	 *
+	 * @since 2.0.0
+	 * @var string
+	 */
+	private $context;
+
+	/**
+	 * Sets the plugin main file.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param string $main_file Absolute path to the plugin main file.
+	 */
+	public function __construct( $main_file ) {
+		$this->context = $main_file;
+	}
+
+	/**
+	 * Gets the plugin main file path.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return string The plugin main file path.
+	 */
+	public function get_context() {
+		return $this->context;
+	}
+}

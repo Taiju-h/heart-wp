@@ -1,0 +1,33 @@
+[
+{
+  "name": "sakura",
+  "color": "#FFDCD6",
+  "note": "ピンク"
+},
+{
+  "name": "ishi",
+  "color": "#777777",
+  "note": "グレー"
+},
+{
+  "name": "nori",
+  "color": "#81A04E",
+  "note": "緑"
+},
+{
+  "name": "cha",
+  "color": "#726054",
+  "note": "茶"
+},
+{
+  "name": "fuji",
+  "color": "#A69BB2",
+  "note": "紫"
+},
+{
+  "name": "shiro",
+  "color": "#fff",
+  "subcolor": "#8A8A04",
+  "note": "白・カーキ"
+}
+]
