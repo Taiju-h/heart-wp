@@ -256,9 +256,9 @@ function heartful_voice_get_batch($cursor = null, $page_size = HEARTFUL_VOICE_PA
 }
 
 /**
- * Render review cards shared by the initial page and AJAX responses.
+ * Render review cards shared by the archive, homepage slider, and AJAX responses.
  */
-function heartful_voice_render_items($rows)
+function heartful_voice_render_items($rows, $excerpt_words = 0)
 {
 	ob_start();
 	foreach ($rows as $row) {
@@ -268,6 +268,7 @@ function heartful_voice_render_items($rows)
 		$teacher_id      = absint($row['teacher_id'] ?? 0);
 		$profile_url     = '';
 		$reservation_url = '';
+		$content          = $row['content'];
 
 		if ($teacher && ! preg_match('/先生$/u', $teacher)) {
 			$teacher_display .= '先生';
@@ -286,6 +287,14 @@ function heartful_voice_render_items($rows)
 					'selectype'      => 'kanteishi',
 				),
 				trailingslashit(USER_URL) . 'yoyaku'
+			);
+		}
+
+		if ($excerpt_words > 0) {
+			$content = wp_trim_words(
+				wp_strip_all_tags(strip_shortcodes($content)),
+				absint($excerpt_words),
+				'…'
 			);
 		}
 		?>
@@ -321,11 +330,42 @@ function heartful_voice_render_items($rows)
 					<p class="Mincho heartful-voice-customer"><span>ご相談者</span><?php echo esc_html($row['title']); ?></p>
 				</div>
 				<span class="hosi"><?php echo esc_html($row['rating']); ?></span>
-				<div class="heartful-voice-text"><?php echo wp_kses_post(wpautop($row['content'])); ?></div>
+				<div class="heartful-voice-text">
+					<?php if ($excerpt_words > 0) : ?>
+						<p><?php echo esc_html($content); ?></p>
+					<?php else : ?>
+						<?php echo wp_kses_post(wpautop($content)); ?>
+					<?php endif; ?>
+				</div>
 			</div>
 		</li>
 		<?php
 	}
+
+	return ob_get_clean();
+}
+
+/**
+ * Render the shared teacher profile / booking dialog.
+ */
+function heartful_voice_render_teacher_dialog()
+{
+	ob_start();
+	?>
+	<div id="heartful-voice-teacher-dialog" class="heartful-voice-teacher-dialog" hidden>
+		<div class="heartful-voice-dialog-backdrop" data-heartful-voice-close></div>
+		<div class="heartful-voice-dialog-panel" role="dialog" aria-modal="true" aria-labelledby="heartful-voice-dialog-title" tabindex="-1">
+			<button type="button" class="heartful-voice-dialog-close" data-heartful-voice-close aria-label="閉じる">×</button>
+			<p class="heartful-voice-dialog-label">鑑定師</p>
+			<h3 id="heartful-voice-dialog-title"><span id="heartful-voice-dialog-teacher-name"></span></h3>
+			<p class="heartful-voice-dialog-lead">ご希望のページをお選びください。</p>
+			<div class="heartful-voice-dialog-actions">
+				<a id="heartful-voice-profile-link" class="heartful-voice-dialog-link heartful-voice-dialog-link-profile" href="">プロフィールを見る</a>
+				<a id="heartful-voice-reservation-link" class="heartful-voice-dialog-link heartful-voice-dialog-link-reservation" href="">この先生を予約する</a>
+			</div>
+		</div>
+	</div>
+	<?php
 
 	return ob_get_clean();
 }

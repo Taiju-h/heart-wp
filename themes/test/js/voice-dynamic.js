@@ -1,9 +1,9 @@
 (function () {
   'use strict';
 
-  var config = window.heartfulVoice;
+	var config = window.heartfulVoice || null;
   var button = document.getElementById('heartful-voice-more');
-  var list = document.getElementById('heartful-voice-list');
+	var list = document.getElementById('heartful-voice-list') || document.querySelector('.voice.slick2');
   var status = document.getElementById('heartful-voice-status');
 	var dialog = document.getElementById('heartful-voice-teacher-dialog');
 	var dialogPanel = dialog ? dialog.querySelector('.heartful-voice-dialog-panel') : null;
@@ -12,7 +12,7 @@
 	var reservationLink = document.getElementById('heartful-voice-reservation-link');
 	var lastTrigger = null;
 
-	if (!config || !list) {
+	if (!list) {
 		return;
 	}
 
@@ -68,7 +68,7 @@
 		});
 	}
 
-	if (!button || !status) {
+	if (!config || !button || !status) {
 		return;
 	}
 

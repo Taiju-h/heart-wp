@@ -177,6 +177,11 @@ $args = array(
      </div>
     </footer>
 
+          <?php if (is_front_page() || is_home()) : ?>
+            <?php echo heartful_voice_render_teacher_dialog(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+            <script defer src="<?php echo esc_url(get_theme_file_uri('/js/voice-dynamic.js')); ?>?v=1.2.0"></script>
+          <?php endif; ?>
+
           <script type="text/javascript" src="<?php echo esc_url( get_theme_file_uri() ); ?>/js/dist/jquery.zoomslider.min.js" ></script>
           <script type="text/javascript" src="<?php echo esc_url( get_theme_file_uri() ); ?>/js/slick.min.js"></script>
           <script type="text/javascript" src="<?php echo esc_url( get_theme_file_uri() ); ?>/js/ofi.min.js"></script>
