@@ -2007,16 +2007,16 @@ main {
   line-height: 1.4;
 }
 
-.heartful-voice-teacher-label {
+.voice .profile_container .profile_detail p.heartful-voice-teacher .heartful-voice-teacher-label {
   -webkit-box-flex: 0;
   -ms-flex: 0 0 auto;
   flex: 0 0 auto;
-  padding: 0.18em 0.55em;
+  padding: 0.22em 0.65em;
   border-radius: 999px;
-  background: #9c7a89;
+  background: #7f5368;
   color: #fff;
-  font-size: 0.68rem;
-  font-weight: 500;
+  font-size: 0.72rem;
+  font-weight: 700;
   letter-spacing: 0.08em;
 }
 
