@@ -20,15 +20,30 @@ get_header();
 					<button id="heartful-voice-more" class="heartful-voice-more" type="button" aria-controls="heartful-voice-list">もっと見る</button>
 					<p id="heartful-voice-status" class="heartful-voice-status" role="status" aria-live="polite"></p>
 				</div>
-				<script>
-				window.heartfulVoice = <?php echo wp_json_encode(array(
-					'ajaxUrl' => admin_url('admin-ajax.php'),
-					'nonce'   => wp_create_nonce('heartful_voice_load_more'),
-					'cursor'  => $heartful_voice_batch['next_cursor'],
-				)); ?>;
-				</script>
-				<script defer src="<?php echo esc_url(get_theme_file_uri('/js/voice-dynamic.js')); ?>?v=1.0.0"></script>
 			<?php endif; ?>
+
+			<div id="heartful-voice-teacher-dialog" class="heartful-voice-teacher-dialog" hidden>
+				<div class="heartful-voice-dialog-backdrop" data-heartful-voice-close></div>
+				<div class="heartful-voice-dialog-panel" role="dialog" aria-modal="true" aria-labelledby="heartful-voice-dialog-title" tabindex="-1">
+					<button type="button" class="heartful-voice-dialog-close" data-heartful-voice-close aria-label="閉じる">×</button>
+					<p class="heartful-voice-dialog-label">鑑定師</p>
+					<h3 id="heartful-voice-dialog-title"><span id="heartful-voice-dialog-teacher-name"></span></h3>
+					<p class="heartful-voice-dialog-lead">ご希望のページをお選びください。</p>
+					<div class="heartful-voice-dialog-actions">
+						<a id="heartful-voice-profile-link" class="heartful-voice-dialog-link heartful-voice-dialog-link-profile" href="">プロフィールを見る</a>
+						<a id="heartful-voice-reservation-link" class="heartful-voice-dialog-link heartful-voice-dialog-link-reservation" href="">この先生を予約する</a>
+					</div>
+				</div>
+			</div>
+
+			<script>
+			window.heartfulVoice = <?php echo wp_json_encode(array(
+				'ajaxUrl' => admin_url('admin-ajax.php'),
+				'nonce'   => wp_create_nonce('heartful_voice_load_more'),
+				'cursor'  => $heartful_voice_batch['next_cursor'],
+			)); ?>;
+			</script>
+			<script defer src="<?php echo esc_url(get_theme_file_uri('/js/voice-dynamic.js')); ?>?v=1.1.0"></script>
 		<?php endif; ?>
 	</div>
 </main>

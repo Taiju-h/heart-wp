@@ -265,15 +265,50 @@ function heartful_voice_render_items($rows)
 		$date            = date_create($row['created']);
 		$teacher         = trim($row['teacher'] ?? '');
 		$teacher_display = $teacher;
+		$teacher_id      = absint($row['teacher_id'] ?? 0);
+		$profile_url     = '';
+		$reservation_url = '';
 
 		if ($teacher && ! preg_match('/先生$/u', $teacher)) {
 			$teacher_display .= '先生';
+		}
+
+		if ($teacher_id) {
+			$profile_url = trailingslashit(USER_URL)
+				. 'Mkanteishis/view/'
+				. $teacher_id
+				. '/'
+				. rawurlencode(TENPO_ID)
+				. '/';
+			$reservation_url = add_query_arg(
+				array(
+					'mkanteishi_id' => $teacher_id,
+					'selectype'      => 'kanteishi',
+				),
+				trailingslashit(USER_URL) . 'yoyaku'
+			);
 		}
 		?>
 		<li class="heartful-voice-item">
 			<div class="profile_container">
 				<?php if ($row['image']) : ?>
-					<img src="<?php echo esc_url($row['image']); ?>" alt="<?php echo esc_attr($row['alt']); ?>" loading="lazy" decoding="async">
+					<?php if ($teacher_id && $teacher_display) : ?>
+						<button
+							type="button"
+							class="heartful-voice-teacher-trigger"
+							aria-label="<?php echo esc_attr($teacher_display); ?>のプロフィール・予約メニューを開く"
+							aria-haspopup="dialog"
+							aria-controls="heartful-voice-teacher-dialog"
+							data-teacher-name="<?php echo esc_attr($teacher_display); ?>"
+							data-profile-url="<?php echo esc_url($profile_url); ?>"
+							data-reservation-url="<?php echo esc_url($reservation_url); ?>"
+						>
+							<img src="<?php echo esc_url($row['image']); ?>" alt="" loading="lazy" decoding="async">
+							<span class="heartful-voice-photo-link-icon" aria-hidden="true">↗</span>
+						</button>
+					<?php else : ?>
+						<img src="<?php echo esc_url($row['image']); ?>" alt="<?php echo esc_attr($row['alt']); ?>" loading="lazy" decoding="async">
+					<?php endif; ?>
 				<?php endif; ?>
 				<div class="profile_detail">
 					<span class="heartful-voice-date"><?php echo esc_html($date ? $date->format('Y-m-d') : ''); ?></span>

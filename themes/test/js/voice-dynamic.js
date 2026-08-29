@@ -5,12 +5,74 @@
   var button = document.getElementById('heartful-voice-more');
   var list = document.getElementById('heartful-voice-list');
   var status = document.getElementById('heartful-voice-status');
+	var dialog = document.getElementById('heartful-voice-teacher-dialog');
+	var dialogPanel = dialog ? dialog.querySelector('.heartful-voice-dialog-panel') : null;
+	var teacherName = document.getElementById('heartful-voice-dialog-teacher-name');
+	var profileLink = document.getElementById('heartful-voice-profile-link');
+	var reservationLink = document.getElementById('heartful-voice-reservation-link');
+	var lastTrigger = null;
 
-  if (!config || !button || !list || !status) {
-    return;
-  }
+	if (!config || !list) {
+		return;
+	}
 
-  button.addEventListener('click', function () {
+	function findTeacherTrigger(element) {
+		while (element && element !== list) {
+			if (element.classList && element.classList.contains('heartful-voice-teacher-trigger')) {
+				return element;
+			}
+			element = element.parentNode;
+		}
+		return null;
+	}
+
+	function closeTeacherDialog() {
+		if (!dialog || dialog.hidden) {
+			return;
+		}
+
+		dialog.hidden = true;
+		document.body.classList.remove('heartful-voice-dialog-open');
+
+		if (lastTrigger) {
+			lastTrigger.focus();
+		}
+	}
+
+	if (dialog && dialogPanel && teacherName && profileLink && reservationLink) {
+		list.addEventListener('click', function (event) {
+			var trigger = findTeacherTrigger(event.target);
+			if (!trigger) {
+				return;
+			}
+
+			lastTrigger = trigger;
+			teacherName.textContent = trigger.getAttribute('data-teacher-name') || '';
+			profileLink.href = trigger.getAttribute('data-profile-url') || '#';
+			reservationLink.href = trigger.getAttribute('data-reservation-url') || '#';
+			dialog.hidden = false;
+			document.body.classList.add('heartful-voice-dialog-open');
+			dialogPanel.focus();
+		});
+
+		dialog.addEventListener('click', function (event) {
+			if (event.target.hasAttribute('data-heartful-voice-close')) {
+				closeTeacherDialog();
+			}
+		});
+
+		document.addEventListener('keydown', function (event) {
+			if (event.key === 'Escape') {
+				closeTeacherDialog();
+			}
+		});
+	}
+
+	if (!button || !status) {
+		return;
+	}
+
+	button.addEventListener('click', function () {
     var formData = new FormData();
     formData.append('action', 'heartful_voice_load_more');
     formData.append('nonce', config.nonce);

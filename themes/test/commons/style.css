@@ -2052,6 +2052,193 @@ main {
   margin-top: 0.65em;
 }
 
+.heartful-voice-teacher-trigger {
+  position: relative;
+  -webkit-box-flex: 0;
+  -ms-flex: 0 0 70px;
+  flex: 0 0 70px;
+  width: 70px;
+  height: 70px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+}
+
+.heartful-voice-teacher-trigger img {
+  display: block;
+  -webkit-transition: -webkit-box-shadow 0.2s, -webkit-transform 0.2s;
+  transition: -webkit-box-shadow 0.2s, -webkit-transform 0.2s;
+  transition: box-shadow 0.2s, transform 0.2s;
+  transition: box-shadow 0.2s, transform 0.2s, -webkit-box-shadow 0.2s, -webkit-transform 0.2s;
+}
+
+.heartful-voice-teacher-trigger:hover img,
+.heartful-voice-teacher-trigger:focus img {
+  -webkit-box-shadow: 0 0 0 3px #c79bad;
+  box-shadow: 0 0 0 3px #c79bad;
+  -webkit-transform: scale(1.04);
+  transform: scale(1.04);
+}
+
+.heartful-voice-teacher-trigger:focus-visible {
+  outline: 3px solid #6f4f5d;
+  outline-offset: 3px;
+}
+
+.heartful-voice-photo-link-icon {
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  width: 23px;
+  height: 23px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: #7f5368;
+  color: #fff;
+  font-family: Arial, sans-serif;
+  font-size: 0.76rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+body.heartful-voice-dialog-open {
+  overflow: hidden;
+}
+
+.heartful-voice-teacher-dialog {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 10000;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  padding: 1.25rem;
+}
+
+.heartful-voice-teacher-dialog[hidden] {
+  display: none;
+}
+
+.heartful-voice-dialog-backdrop {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: rgba(45, 31, 37, 0.55);
+}
+
+.heartful-voice-dialog-panel {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  padding: 2rem;
+  border-radius: 18px;
+  background: #fff;
+  -webkit-box-shadow: 0 20px 55px rgba(45, 31, 37, 0.25);
+  box-shadow: 0 20px 55px rgba(45, 31, 37, 0.25);
+  text-align: center;
+}
+
+@media (max-width: 550px) {
+  .heartful-voice-dialog-panel {
+    padding: 1.6rem 1.2rem 1.25rem;
+  }
+}
+
+.heartful-voice-dialog-close {
+  position: absolute;
+  top: 0.65rem;
+  right: 0.75rem;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #6f4f5d;
+  font-size: 1.8rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.heartful-voice-dialog-label {
+  margin: 0 0 0.4rem;
+  color: #9a7183;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+}
+
+#heartful-voice-dialog-title {
+  margin: 0;
+  color: #60414f;
+  font-size: 1.45rem;
+  line-height: 1.5;
+}
+
+.heartful-voice-dialog-lead {
+  margin: 0.65rem 0 1.35rem;
+  color: #555;
+  font-size: 0.95rem;
+}
+
+.heartful-voice-dialog-actions {
+  display: -ms-grid;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.heartful-voice-dialog-link {
+  display: block;
+  padding: 0.9rem 1.2rem;
+  border: 1px solid #8c6577;
+  border-radius: 999px;
+  color: #6f4f5d;
+  font-size: 1rem;
+  font-weight: 700;
+  text-decoration: none;
+  -webkit-transition: background-color 0.2s, color 0.2s;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.heartful-voice-dialog-link:hover,
+.heartful-voice-dialog-link:focus {
+  background: #f5edf1;
+  color: #5f3d4d;
+  text-decoration: none;
+}
+
+.heartful-voice-dialog-link-reservation {
+  background: #7f5368;
+  color: #fff;
+}
+
+.heartful-voice-dialog-link-reservation:hover,
+.heartful-voice-dialog-link-reservation:focus {
+  background: #684254;
+  color: #fff;
+}
+
 .heartful-voice-text {
   width: 100%;
   -ms-flex-preferred-size: 100%;
