@@ -9,6 +9,7 @@
 - Branch: master
 - Git root: /home/heartf/heartf.com/public_html/uranai/wp-content
 - Production URL: https://uranai.heartf.com/
+- Deployment dashboard: https://uranai.heartf.com/deploy-dashboard-uranai.php
 
 ## URLからGitを選ぶルール
 
@@ -41,6 +42,9 @@ URLは、最も具体的に一致するルールから判定してください�
 ## 作業と引き継ぎ
 
 - 修正はGitへコミットしてからデプロイしてください。
+- 本番反映を依頼された場合は、`master` へのpush成功を確認してからDeployment dashboardを使用してください。
+- Deployment dashboardがアクセス承認待ち画面へ移動した場合は回避せず、管理者の承認後にデプロイを続行してください。
+- デプロイ後は対象の公開URLを開き、変更内容と表示崩れの有無を確認してください。
 - 作業完了時は、対象Git、ブランチ、変更ファイル、検証結果、コミット、pushの成否を報告してください。
 - 切り戻しやすいように、目的の異なる変更を同じコミットへ混ぜないでください。
 - URL振り分け、リポジトリ、ブランチ、配置先、デプロイ、テスト方法などの恒久的な新情報が判明したら、同じ作業内で `AGENTS.md` を更新してください。

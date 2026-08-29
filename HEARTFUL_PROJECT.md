@@ -46,6 +46,16 @@ URLは最長一致で判定します。`/Public` の判定をドメイン全体�
 - 似たファイル名や機能が別Gitにあっても、URL判定と各Gitの `AGENTS.md` を根拠に対象を決めます。
 - 1件の依頼が複数システムにまたがる場合は、Gitごとに差分、検証、コミットを分けます。
 
+## WordPressの本番反映
+
+- Git: `Taiju-h/heart-wp`
+- Branch: `master`
+- Production URL: `https://uranai.heartf.com/`
+- Deployment dashboard: `https://uranai.heartf.com/deploy-dashboard-uranai.php`
+- `master` へのpushを確認してからデプロイします。
+- アクセス承認待ち画面へ移動した場合は、管理者の承認を待ち、承認後に続行します。
+- デプロイ後は対象の公開ページで変更内容と表示を確認します。
+
 ## AGENTS.md更新ルール
 
 次のような恒久情報を新しく確認したときは、作業と同時に対象Gitの `AGENTS.md` を更新します。
