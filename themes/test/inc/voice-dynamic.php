@@ -13,6 +13,58 @@ if (! defined('ABSPATH')) {
 const HEARTFUL_VOICE_PAGE_SIZE = 20;
 
 /**
+ * Extract a legacy teacher ID from a WordPress featured image filename.
+ */
+function heartful_voice_get_teacher_id_from_image($image)
+{
+	$path     = $image ? wp_parse_url($image, PHP_URL_PATH) : '';
+	$filename = $path ? pathinfo($path, PATHINFO_FILENAME) : '';
+
+	if (! preg_match('/^0*(\d+)$/', $filename, $matches)) {
+		return 0;
+	}
+
+	return absint($matches[1]);
+}
+
+/**
+ * Return teacher names keyed by legacy teacher ID.
+ */
+function heartful_voice_get_teacher_names($teacher_ids)
+{
+	$teacher_ids = array_values(array_unique(array_filter(array_map('absint', $teacher_ids))));
+	if (! $teacher_ids) {
+		return array();
+	}
+
+	$link = mysqli_init();
+	if (! $link) {
+		return array();
+	}
+
+	mysqli_options($link, MYSQLI_OPT_CONNECT_TIMEOUT, 5);
+	if (! @mysqli_real_connect($link, SEVER, USER_ID, USER_PASS, USER_DB)) {
+		return array();
+	}
+	mysqli_set_charset($link, USER_CHATSET);
+
+	$sql    = 'SELECT id, name FROM mkanteishis WHERE delflg = 0 AND id IN (' . implode(',', $teacher_ids) . ')';
+	$result = mysqli_query($link, $sql);
+	$names  = array();
+
+	if ($result) {
+		while ($row = mysqli_fetch_assoc($result)) {
+			$names[(int) $row['id']] = $row['name'];
+		}
+		mysqli_free_result($result);
+	}
+
+	mysqli_close($link);
+
+	return $names;
+}
+
+/**
  * Return WordPress customer voice posts older than the supplied cursor.
  */
 function heartful_voice_get_wp_rows($cursor, $limit)
@@ -46,16 +98,19 @@ function heartful_voice_get_wp_rows($cursor, $limit)
 	$rows  = array();
 
 	foreach ($posts as $post) {
-		$image  = get_the_post_thumbnail_url((int) $post->ID, 'full');
+		$image      = get_the_post_thumbnail_url((int) $post->ID, 'full');
+		$teacher_id = heartful_voice_get_teacher_id_from_image($image);
 		$rows[] = array(
-			'id'      => (int) $post->ID,
-			'source'  => 'wp',
-			'created' => $post->post_date,
-			'title'   => $post->post_title,
-			'content' => $post->post_content,
-			'image'   => $image ? $image : '',
-			'alt'     => $post->post_title,
-			'rating'  => '★★★★★',
+			'id'         => (int) $post->ID,
+			'source'     => 'wp',
+			'created'    => $post->post_date,
+			'title'      => $post->post_title,
+			'content'    => $post->post_content,
+			'image'      => $image ? $image : '',
+			'alt'        => $post->post_title,
+			'rating'     => '★★★★★',
+			'teacher_id' => $teacher_id,
+			'teacher'    => '',
 		);
 	}
 
@@ -124,14 +179,16 @@ function heartful_voice_get_legacy_rows($cursor, $limit)
 
 	while ($row = mysqli_fetch_assoc($result)) {
 		$rows[] = array(
-			'id'      => (int) $row['id'],
-			'source'  => 'legacy',
-			'created' => $row['created'],
-			'title'   => trim($row['nicname']) . '(' . $row['Mname'] . $row['KBN'] . ')',
-			'content' => $row['feedback'],
-			'image'   => USER_IMG3 . sprintf('%04d', $row['mkanteishi_id']) . '.jpg',
-			'alt'     => $row['name'],
-			'rating'  => $row['evaname'],
+			'id'         => (int) $row['id'],
+			'source'     => 'legacy',
+			'created'    => $row['created'],
+			'title'      => trim($row['nicname']) . '(' . $row['Mname'] . $row['KBN'] . ')',
+			'content'    => $row['feedback'],
+			'image'      => USER_IMG3 . sprintf('%04d', $row['mkanteishi_id']) . '.jpg',
+			'alt'        => $row['name'],
+			'rating'     => $row['evaname'],
+			'teacher_id' => (int) $row['mkanteishi_id'],
+			'teacher'    => $row['name'],
 		);
 	}
 
@@ -154,6 +211,15 @@ function heartful_voice_get_batch($cursor = null, $page_size = HEARTFUL_VOICE_PA
 	if (is_wp_error($legacy)) {
 		return $legacy;
 	}
+
+	$teacher_names = heartful_voice_get_teacher_names(wp_list_pluck($wp_rows, 'teacher_id'));
+	foreach ($wp_rows as &$wp_row) {
+		if ($wp_row['teacher_id'] && isset($teacher_names[$wp_row['teacher_id']])) {
+			$wp_row['teacher'] = $teacher_names[$wp_row['teacher_id']];
+			$wp_row['alt']     = $wp_row['teacher'];
+		}
+	}
+	unset($wp_row);
 
 	$rows = array_merge($wp_rows, $legacy);
 	usort($rows, function ($left, $right) {
@@ -196,7 +262,13 @@ function heartful_voice_render_items($rows)
 {
 	ob_start();
 	foreach ($rows as $row) {
-		$date = date_create($row['created']);
+		$date            = date_create($row['created']);
+		$teacher         = trim($row['teacher'] ?? '');
+		$teacher_display = $teacher;
+
+		if ($teacher && ! preg_match('/先生$/u', $teacher)) {
+			$teacher_display .= '先生';
+		}
 		?>
 		<li class="heartful-voice-item">
 			<div class="profile_container">
@@ -204,8 +276,14 @@ function heartful_voice_render_items($rows)
 					<img src="<?php echo esc_url($row['image']); ?>" alt="<?php echo esc_attr($row['alt']); ?>" loading="lazy" decoding="async">
 				<?php endif; ?>
 				<div class="profile_detail">
-					<span><?php echo esc_html($date ? $date->format('Y-m-d') : ''); ?></span>
-					<p class="Mincho"><?php echo esc_html($row['title']); ?></p>
+					<span class="heartful-voice-date"><?php echo esc_html($date ? $date->format('Y-m-d') : ''); ?></span>
+					<?php if ($teacher_display) : ?>
+						<p class="heartful-voice-teacher">
+							<span class="heartful-voice-teacher-label">鑑定師</span>
+							<strong class="heartful-voice-teacher-name"><?php echo esc_html($teacher_display); ?></strong>
+						</p>
+					<?php endif; ?>
+					<p class="Mincho heartful-voice-customer"><span>ご相談者</span><?php echo esc_html($row['title']); ?></p>
 				</div>
 				<span class="hosi"><?php echo esc_html($row['rating']); ?></span>
 				<div class="heartful-voice-text"><?php echo wp_kses_post(wpautop($row['content'])); ?></div>

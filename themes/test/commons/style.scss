@@ -1314,9 +1314,93 @@ main {
   text-align: center;
 }
 
+.heartful-voice-item {
+  margin-bottom: 2em;
+
+  .profile_container {
+    height: 100%;
+    align-content: flex-start;
+    padding: 1.25em;
+    border: 1px solid #eadde3;
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 8px 24px rgba(92, 61, 76, 0.08);
+
+    @include sp {
+      padding: 1em;
+    }
+  }
+
+  .profile_detail {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+.voice .profile_container .profile_detail .heartful-voice-date {
+  display: block;
+  margin-bottom: 0.25em;
+  color: #8b7b82;
+  font-size: 0.78rem;
+}
+
+.voice .profile_container .profile_detail p.heartful-voice-teacher {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  margin: 0 0 0.45em;
+  color: #6f4f5d;
+  line-height: 1.4;
+}
+
+.heartful-voice-teacher-label {
+  flex: 0 0 auto;
+  padding: 0.18em 0.55em;
+  border-radius: 999px;
+  background: #9c7a89;
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+}
+
+.heartful-voice-teacher-name {
+  font-size: 1.08rem;
+  font-weight: 700;
+}
+
+.voice .profile_container .profile_detail p.heartful-voice-customer {
+  display: flex;
+  gap: 0.45em;
+  align-items: baseline;
+  margin: 0;
+  color: #555;
+  font-size: 0.82rem;
+  font-weight: 500;
+
+  span {
+    flex: 0 0 auto;
+    color: #9a8b91;
+    font-size: 0.72rem;
+  }
+}
+
+.heartful-voice-item .hosi {
+  width: 100%;
+  margin-top: 0.65em;
+}
+
 .heartful-voice-text {
   width: 100%;
   flex-basis: 100%;
+  margin-top: 0.85em;
+  padding-top: 0.85em;
+  border-top: 1px solid #f0e7eb;
+  line-height: 1.85;
+
+  p:last-child {
+    margin-bottom: 0;
+  }
 }
 
 .heartful-voice-more {
