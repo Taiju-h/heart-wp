@@ -11,7 +11,7 @@
 		<link rel="stylesheet" href="<?php echo esc_url( get_theme_file_uri() ); ?>/skin/hokukenstyle/print.css" media="print">
 <link rel="shortcut icon" href="favicon.ico"  type="image/x-icon" />
   <link rel="stylesheet" href="<?php echo esc_url( get_theme_file_uri() ); ?>/commons/reset.css">
-    <link rel="stylesheet" href="<?php echo esc_url( get_theme_file_uri() ); ?>/commons/style.css?v=7">
+    <link rel="stylesheet" href="<?php echo esc_url( get_theme_file_uri() ); ?>/commons/style.css?v=8">
   <link rel="stylesheet" type="text/css" href="<?php echo esc_url( get_theme_file_uri() ); ?>/commons/slick.css?v=4" />
   <link rel="stylesheet" href="<?php echo esc_url( get_theme_file_uri() ); ?>/js/dist/zoomslider.css">
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>

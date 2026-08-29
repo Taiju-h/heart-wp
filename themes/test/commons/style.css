@@ -1953,6 +1953,46 @@ main {
   margin-top: 3em;
 }
 
+.heartful-voice-actions {
+  margin: 2.5em 0 1em;
+  text-align: center;
+}
+
+.heartful-voice-text {
+  width: 100%;
+  -ms-flex-preferred-size: 100%;
+  flex-basis: 100%;
+}
+
+.heartful-voice-more {
+  min-width: 220px;
+  padding: 0.9em 2em;
+  border: 1px solid #9c7a89;
+  border-radius: 999px;
+  background: #fff;
+  color: #6f4f5d;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.heartful-voice-more:hover,
+.heartful-voice-more:focus {
+  background: #9c7a89;
+  color: #fff;
+}
+
+.heartful-voice-more:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.heartful-voice-status,
+.heartful-voice-error {
+  margin-top: 1em;
+  text-align: center;
+}
+
 @media (max-width: 550px) {
   .voice_more {
     margin-top: 0;

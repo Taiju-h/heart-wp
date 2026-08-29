@@ -32,6 +32,7 @@ add_filter( 'the_content', 'my_nl2br_content' );
 
 // functions.php など
 require_once get_stylesheet_directory() . '/inc/db_select.inc.php';
+require_once get_stylesheet_directory() . '/inc/voice-dynamic.php';
 
 function my_db_select_shortcode( $atts ) {
     $atts = shortcode_atts( array(
