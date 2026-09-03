@@ -10,6 +10,7 @@
 - Git root: /home/heartf/heartf.com/public_html/uranai/wp-content
 - Production URL: https://uranai.heartf.com/
 - Deployment dashboard: https://uranai.heartf.com/deploy-dashboard-uranai.php
+- Heartful common IP management: https://uranai.heartf.com/deployment/deploy-access-admin.php
 
 ## URLからGitを選ぶルール
 
@@ -50,3 +51,7 @@ URLは、最も具体的に一致するルールから判定してください�
 - URL振り分け、リポジトリ、ブランチ、配置先、デプロイ、テスト方法などの恒久的な新情報が判明したら、同じ作業内で `AGENTS.md` を更新してください。
 - 複数Gitに共通する情報が変わった場合は `HEARTFUL_PROJECT.md` も更新し、利用可能な各Gitの `AGENTS.md` に同じ要点を反映してください。
 - APIキー、パスワード、秘密鍵、DB接続情報などはドキュメントやコミットへ記載しないでください。
+
+## デプロイ許可IP
+
+WordPress本番デプロイはCakePHP4・CakePHP2と同じ共通IP台帳を使用します。IPの追加・削除は、Cake4のsys管理者ダッシュボードにある「共通IP管理」から、ID・パスワード認証後に行います。WordPress Git内へ独自のIP一覧や認証情報を追加しないでください。
