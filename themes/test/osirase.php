@@ -8,7 +8,6 @@ if ( $my_query->have_posts() ) :
     while ( $my_query->have_posts() ) : $my_query->the_post();
         $count  = $my_query->current_post + 1; // 1始まり
         $suffix = ( $count % 2 === 1 ) ? 1 : 2; // 奇数→1、偶数→2
-        $is_line_announcement = ( get_the_title() === 'LINE公式アカウントを開設いたしました' );
 ?>
 <?php if (get_field('cambg')): ?>
 <div class="bg_gray">
@@ -20,7 +19,7 @@ if ( $my_query->have_posts() ) :
 </div>
 
 <section class="inform_topic<?php echo $suffix; ?>">
-  <h4 class="inform_topic_title<?php echo $is_line_announcement ? ' inform_line_title' : ''; ?>"><?php the_title(); ?></h4>
+  <h4 style="text-align:center;"><?php the_title(); ?></h4>
   <?php the_content(); ?>
 </section><div class="clearfloat"></div>
 <?php if (get_field('cambg')): ?>

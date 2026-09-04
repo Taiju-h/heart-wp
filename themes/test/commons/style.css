@@ -1297,47 +1297,6 @@ main {
   margin-bottom: 0;
 }
 
-.inform_topic_title {
-  text-align: center;
-}
-
-.inform_line_title {
-  margin: 0 0 1.5rem;
-  padding: 1rem 1.25rem;
-  color: #087b3e;
-  font-size: 2.4rem;
-  font-weight: 700;
-  line-height: 1.5;
-  letter-spacing: 0.05em;
-  background: linear-gradient(135deg, #f3fff7 0%, #dcf8e6 100%);
-  border: 2px solid #20b968;
-  border-radius: 12px;
-  box-shadow: 0 5px 14px rgba(8, 123, 62, 0.16);
-}
-
-.inform_line_title::before {
-  content: "LINE";
-  display: inline-block;
-  margin-right: 0.65em;
-  padding: 0.18em 0.55em;
-  color: #fff;
-  font-size: 0.55em;
-  line-height: 1.4;
-  letter-spacing: 0.03em;
-  vertical-align: 0.18em;
-  background: #06c755;
-  border-radius: 999px;
-}
-
-@media (max-width: 550px) {
-  .inform_line_title {
-    margin-bottom: 1rem;
-    padding: 0.8rem 0.75rem;
-    font-size: 1.8rem;
-    letter-spacing: 0.02em;
-  }
-}
-
 @media (max-width: 550px) {
   .inform_topic1 p {
     line-height: 1.8;
