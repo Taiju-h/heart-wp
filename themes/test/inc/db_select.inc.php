@@ -928,64 +928,114 @@ function mcast_top2($chokuei = NULL, $mtenpo_id = null)
 
 function eoshirase_view($kbn = NULL, $mtenpo_id = NULL)
 {
-
-	/* kbn = 1 占い師、2 = 会社 4= 両方*/
-
+	/* kbn = 1: 鑑定士、2: 会社、3: 旧店舗別 */
 	$link = mysqli_connect(SEVER, USER_ID, USER_PASS, USER_DB);
+	if (!$link) {
+		error_log('eoshirase_view DB接続エラー: ' . mysqli_connect_error());
+		return '<!-- eoshirase_view: DB接続エラー -->';
+	}
+
 	mysqli_set_charset($link, USER_CHATSET);
-	//mysqli_select_db(USER_DB, $link );
-	if ($kbn == 1) {
-		$SQL = "SELECT  Eoshirase.word as word, Mkanteishi.name as name FROM eoshirase as Eoshirase, mkanteishis as Mkanteishi ";
-		$SQL .= " WHERE Eoshirase.mkanteishi_id = Mkanteishi.id AND Eoshirase.mdivision_id = 1";
-		$SQL .= ' AND Eoshirase.period >= DATE_FORMAT(now(),"%Y-%m-%D") ORDER BY  Eoshirase.id  DESC';
-	}
-	if ($kbn == 2) {
-		//var_dump($kbn. "<br>" . $mtenpo_id);
-
-		$SQL = "SELECT  Ecoshirase.sdate, Ecoshirase.word  FROM ecoshirases as Ecoshirase";
-		$SQL .= " WHERE Ecoshirase.mdivision_id = 1 AND (Ecoshirase.mtenpo_id = 1 OR ";
-		if ($mtenpo_id == 1)
-			$SQL .= " Ecoshirase.allflg = 1)";
-		else $SQL .= " Ecoshirase.mtenpo_id = " . $mtenpo_id . ")";
-		$SQL .= ' AND Ecoshirase.period >= DATE_FORMAT(now(),"%Y-%m-%D") ORDER BY  Ecoshirase.sdate  DESC';
-	}
-	//var_dump($kbn. "<br>" .$SQL);
-	if ($kbn == 3) {
-
-		$SQL = "SELECT  Ecoshirase.sdate, Ecoshirase.word  FROM ecoshirasem as Ecoshirase";
-		$SQL .= " WHERE Ecoshirase.mdivision_id = 1 AND Ecoshirase.mtenpo_id = " . $mtenpo_id;
-		$SQL .= ' AND Ecoshirase.period >= DATE_FORMAT(now(),"%Y-%m-%D") ORDER BY  Ecoshirase.sdate  DESC';
-	}
-
-	$data = mysqli_query($link, $SQL);
 	$output = NULL;
-	if ($kbn == 2 or $kbn == 3) {
-		$output .= '<div class="kousin_area">';
-		$output .= '<ul>';
+	$data = false;
 
+	if ($kbn == 1) {
+		$SQL = "
+			SELECT
+				Eoshirase.word AS word,
+				Mkanteishi.name AS name
+			FROM eoshirase AS Eoshirase
+			INNER JOIN mkanteishis AS Mkanteishi
+				ON Eoshirase.mkanteishi_id = Mkanteishi.id
+			WHERE
+				Eoshirase.mdivision_id = 1
+				AND Eoshirase.period >= CURDATE()
+			ORDER BY Eoshirase.id DESC
+		";
+		$data = mysqli_query($link, $SQL);
+	} elseif ($kbn == 2) {
+		/*
+		 * Cake4 /Ecoshirases で登録する「会社からのお知らせ」。
+		 * メインサイト(店舗ID 1)では、店舗ID 1 の記事と
+		 * 「uranaiに掲載」(allflg=1) の店舗記事を表示する。
+		 * 店舗サイトでは、共通(店舗ID 1) + 当該店舗の記事を表示する。
+		 */
+		$targetTenpoId = (is_numeric($mtenpo_id) && (int)$mtenpo_id > 0)
+			? (int)$mtenpo_id
+			: 1;
+
+		$tenpoCondition = $targetTenpoId === 1
+			? '(Ecoshirase.mtenpo_id = 1 OR Ecoshirase.allflg = 1)'
+			: '(Ecoshirase.mtenpo_id = 1 OR Ecoshirase.mtenpo_id = ' . $targetTenpoId . ')';
+
+		$SQL = "
+			SELECT
+				Ecoshirase.id,
+				Ecoshirase.sdate,
+				Ecoshirase.word
+			FROM ecoshirases AS Ecoshirase
+			WHERE
+				Ecoshirase.mdivision_id = 1
+				AND {$tenpoCondition}
+				AND Ecoshirase.sdate <= CURDATE()
+				AND Ecoshirase.period >= CURDATE()
+			ORDER BY Ecoshirase.sdate DESC, Ecoshirase.id DESC
+		";
+		$data = mysqli_query($link, $SQL);
+	} elseif ($kbn == 3) {
+		$targetTenpoId = (is_numeric($mtenpo_id) && (int)$mtenpo_id > 0)
+			? (int)$mtenpo_id
+			: 1;
+
+		$SQL = "
+			SELECT
+				Ecoshirase.sdate,
+				Ecoshirase.word
+			FROM ecoshirasem AS Ecoshirase
+			WHERE
+				Ecoshirase.mdivision_id = 1
+				AND Ecoshirase.mtenpo_id = {$targetTenpoId}
+				AND Ecoshirase.sdate <= CURDATE()
+				AND Ecoshirase.period >= CURDATE()
+			ORDER BY Ecoshirase.sdate DESC
+		";
+		$data = mysqli_query($link, $SQL);
+	}
+
+	if ($data === false) {
+		error_log('eoshirase_view SQLエラー: ' . mysqli_error($link));
+		mysqli_close($link);
+		return '<!-- eoshirase_view: SQLエラー -->';
+	}
+
+	if ($kbn == 2 || $kbn == 3) {
+		$items = '';
 		while ($ecoshirase = mysqli_fetch_assoc($data)) {
-
-			$output .= '<li><b>' .  substr($ecoshirase['sdate'], 5) . ' </b>';
-
-			$output .=  $ecoshirase['word'];
-			$output .= '</li>';
+			$items .= '<li><b>' . substr($ecoshirase['sdate'], 5) . ' </b>';
+			$items .= $ecoshirase['word'];
+			$items .= '</li>';
+		}
+		if ($items !== '') {
+			$output = '<div class="kousin_area"><ul>' . $items . '</ul></div>';
 		}
 	}
 
 	if ($kbn == 1) {
-		while ($ecoshirase = mysqli_fetch_assoc($ecoshirases)) {
-			$output .= '<li><b>' . $eoshirase['name'] . "よりお知らせ" . '</b></br>' . $eoshirase['word'] . '</li>';
+		$items = '';
+		while ($eoshirase = mysqli_fetch_assoc($data)) {
+			$items .= '<li><b>' . $eoshirase['name'] . 'よりお知らせ</b><br>';
+			$items .= $eoshirase['word'];
+			$items .= '</li>';
 		}
-		if (!is_null($output))
-			$output =  '<h2>鑑定士よりお知らせ</h2><div class="kousin_area"><ul>' . $putput;
+		if ($items !== '') {
+			$output = '<h2>鑑定士よりお知らせ</h2><div class="kousin_area"><ul>' . $items . '</ul></div>';
+		}
 	}
 
-	if (!is_null($output))
-		$output .= '</ul></div>';
+	mysqli_free_result($data);
 	mysqli_close($link);
-	return ($output);
+	return $output;
 }
-
 
 function Tfeedback_view($id = NULL, $kid = NULL, $count = NULL, $mcount = NULL)
 {
