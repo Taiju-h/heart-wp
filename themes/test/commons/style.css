@@ -1517,7 +1517,7 @@ main {
   margin: 0 auto;
   padding: .8rem 1.6rem;
   border: 2px solid #ffe940;
-  border-radius: 8px;
+  border-radius: 0;
   color: #ffe940;
   background: #430086;
   font-size: 1rem;
