@@ -44,6 +44,19 @@ function my_db_select_shortcode( $atts ) {
         'sub4'      => null,
     ), $atts, 'db_select' );
 
+    if ($atts['pref'] === 'mcast_top') {
+        require_once get_stylesheet_directory() . '/inc/mcast-top.php';
+        // Preserve the legacy shortcode's store/default argument normalization.
+        $store = $atts['mtenpo_id'];
+        $mode = empty($atts['sub']) ? null : $atts['sub'];
+        if ($store === 'chat' || $store === 'tel') {
+            $mode = TENPO_ID == 'ALL' ? null : TENPO_ID;
+        } elseif (!is_numeric($store)) {
+            $store = TENPO_ID != 'ALL' ? TENPO_ID : null;
+        }
+        return heartful_mcast_top($mode, $store);
+    }
+
     return plugin_db_select_convert(
         $atts['pref'],
         $atts['mtenpo_id'],
