@@ -1507,6 +1507,34 @@ main {
   }
 }
 
+/* The off-day roster shares the existing portrait grid and purple background. */
+.other-soothsayers { padding: 0 0 2rem; }
+.other-soothsayers > summary {
+  display: block;
+  list-style: none;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: .8rem 1.6rem;
+  border: 2px solid #ffe940;
+  border-radius: 8px;
+  color: #ffe940;
+  background: #430086;
+  font-size: 1rem;
+  text-align: center;
+  cursor: pointer;
+}
+.other-soothsayers > summary::-webkit-details-marker { display: none; }
+.other-soothsayers > summary::after { content: " ＋"; }
+.other-soothsayers[open] > summary::after { content: " −"; }
+.other-soothsayers > summary:hover { background: #6100a8; }
+.other-soothsayers > summary:focus-visible { outline: 3px solid white; outline-offset: 4px; }
+.other-soothsayers-content { margin-top: 2rem; }
+.other-soothsayers-status { color: #fff; text-align: center; font-size: .8rem; }
+@media (max-width: 550px) {
+  .other-soothsayers-status { font-size: .6rem; }
+}
+
 .judgment {
   display: -webkit-box;
   display: -ms-flexbox;

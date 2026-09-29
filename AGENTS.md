@@ -55,3 +55,9 @@ URLは、最も具体的に一致するルールから判定してください�
 ## デプロイ許可IP
 
 WordPress本番デプロイはCakePHP4・CakePHP2と同じ共通IP台帳を使用します。IPの追加・削除は、Cake4のsys管理者ダッシュボードにある「共通IP管理」から、ID・パスワード認証後に行います。WordPress Git内へ独自のIP一覧や認証情報を追加しないでください。
+
+## トップの占い師一覧
+
+- `[db_select pref="mcast_top"]` は `themes/test/functions.php` から `themes/test/inc/mcast-top.php` の `heartful_mcast_top()` を呼び出します。写真カードは同関数内の共通レンダラーを使用します。
+- 全店トップの「それ以外の占い師」は `themes/test/inc/other-soothsayers.php`。`mkanteishis.delflg = 0`、公開部門 `mcast.mdivision_id = 1` を条件に、テスト先生(ID5)・本日の有効出演予定・本日の表示済み先生を除外します。午前5時の営業日切替は本日の一覧と共通です。
+- 開閉はネイティブの `details/summary`、デザインは `themes/test/commons/style.css`。CSS更新時は `header.php` のバージョンも更新します。
