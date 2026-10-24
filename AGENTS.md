@@ -67,3 +67,4 @@ WordPress本番デプロイはCakePHP4・CakePHP2と同じ共通IP台帳を使�
 - トップページが埋め込む `https://heartf.com/wplist.php` の設置先は `/home/heartf/heartf.com/public_html/wplist.php`。`uranai/wp-content` 外のため、WordPressテーマの通常デプロイでは更新されません。12店舗Gitの対象にも追加しません。
 - 差替え用のWordPressコードとバックアップ付きインストーラーは `maintenance/wplist/install.sh` にあります。サーバーの `heartf` ユーザーで実行し、PHP 8.4構文・ペイロード検査後、WEBROOT外へ元ファイルを退避して置き換えます。
 - 手順と検証: `maintenance/wplist/README.md`。インストーラーの隔離検証は `python3 maintenance/wplist/test_install.py`。反映後は公開一覧とHPで対象記事を確認し、Gitの統合を本番反映と混同しないでください。
+- 集約PHPの回帰テストは `PHP_WASM_ROOT=/path/to/node_modules node maintenance/wplist/tests/check.cjs`。`HEARTFUL_WPLIST_RENDER_DIR` で確認用HTMLを出力できます。背景・文字色は埋込み先のCSSに依存させず、PC幅と320px／390px幅で長いタイトルの折返しと横はみ出しを確認します。

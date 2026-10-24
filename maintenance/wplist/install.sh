@@ -69,7 +69,8 @@ function heartful_wplist_collect($now = null)
                     'timestamp' => $timestamp,
                     'title' => get_the_title($blog_post),
                     'url' => get_permalink($blog_post),
-                    'date' => get_the_date('Y/m/d/', $blog_post),
+                    'date' => get_the_date('Y/m/d', $blog_post),
+                    'datetime' => get_the_date('Y-m-d', $blog_post),
                     'is_new' => $timestamp > $new_cutoff,
                 );
             }
@@ -106,44 +107,162 @@ $heartful_updates = heartful_wplist_collect();
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<style type="text/css">
-body {
-    margin: 20px;
-    padding: 0;
-    color: #FFF;
-    font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS P Gothic", sans-serif;
-    font-size: 14px;
-    line-height: 26px;
-    overflow-x: hidden;
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>占い師のブログ｜占いハートフル</title>
+<style>
+* {
+    box-sizing: border-box;
 }
-a:link, a:active, a:visited {
-    color: #FFFFCC;
+html {
+    color-scheme: light;
+    background: #fff;
+}
+body {
+    margin: 0;
+    padding: 20px;
+    background: #fff;
+    color: #302735;
+    font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS P Gothic", sans-serif;
+    font-size: 16px;
+    line-height: 1.7;
+}
+.blog-updates {
+    max-width: 960px;
+    margin: 0 auto;
+}
+.blog-updates h1 {
+    margin: 0 0 4px;
+    font-size: 24px;
+    line-height: 1.5;
+}
+.blog-updates-intro {
+    margin: 0 0 24px;
+    color: #665d6b;
+    font-size: 14px;
+}
+.blog-group {
+    margin: 0 0 24px;
+    border: 1px solid #ded7e3;
+}
+.blog-group h2 {
+    margin: 0;
+    padding: 12px 16px;
+    background: #f5f1f7;
+    color: #493056;
+    font-size: 18px;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+.blog-posts {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.blog-posts li + li {
+    border-top: 1px solid #eee9f0;
+}
+.blog-post,
+.blog-post:visited {
+    display: grid;
+    grid-template-columns: 6.2rem minmax(0, 1fr);
+    gap: 12px;
+    min-height: 48px;
+    padding: 12px 16px;
+    color: #493056;
+    text-decoration: none;
+    overflow-wrap: anywhere;
+}
+.blog-post:hover {
+    background: #faf7fc;
+}
+.blog-post:focus-visible {
+    outline: 3px solid #71448a;
+    outline-offset: -3px;
+    background: #faf7fc;
+}
+.blog-post-date {
+    padding-top: 2px;
+    color: #665d6b;
+    font-size: 14px;
+    font-variant-numeric: tabular-nums;
+}
+.blog-post-content {
+    min-width: 0;
+}
+.blog-post-title {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+.blog-post-new {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 1px 6px;
+    vertical-align: 1px;
+    background: #f9e5da;
+    color: #8a351b;
+    font-size: 11px;
+    font-weight: bold;
+    line-height: 1.6;
+}
+.blog-updates-empty {
+    padding: 20px 16px;
+    border: 1px solid #ded7e3;
+}
+@media (max-width: 480px) {
+    body {
+        padding: 12px;
+    }
+    .blog-updates h1 {
+        font-size: 22px;
+    }
+    .blog-group h2 {
+        padding: 12px;
+        font-size: 16px;
+    }
+    .blog-post {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 2px;
+        padding: 10px 12px 12px;
+    }
 }
 </style>
 </head>
 <body>
-<!-- Heartful blog updates: 2026-10-25 -->
+<!-- Heartful blog updates: 2026-10-25 readable-v2 -->
+<main class="blog-updates">
+<h1>占い師のブログ</h1>
+<p class="blog-updates-intro">30日以内の更新をご紹介します。</p>
 <?php if (empty($heartful_updates)) : ?>
-<p>現在、30日以内のブログ更新はありません。</p>
+<p class="blog-updates-empty">現在、30日以内のブログ更新はありません。</p>
 <?php endif; ?>
 <?php foreach ($heartful_updates as $heartful_update) : ?>
-<p>
-<?php echo esc_html($heartful_update['title']); ?><br>
+<section class="blog-group">
+<h2><?php echo esc_html($heartful_update['title']); ?></h2>
+<ul class="blog-posts">
 <?php foreach ($heartful_update['items'] as $heartful_item) : ?>
-<a href="<?php echo esc_url($heartful_item['url']); ?>" target="_blank" rel="noopener noreferrer">【<?php echo esc_html($heartful_item['title'] . $heartful_item['date']); ?>】</a>
+<li>
+<a class="blog-post" href="<?php echo esc_url($heartful_item['url']); ?>" target="_blank" rel="noopener noreferrer">
+<time class="blog-post-date" datetime="<?php echo esc_attr($heartful_item['datetime']); ?>"><?php echo esc_html($heartful_item['date']); ?></time>
+<span class="blog-post-content">
+<span class="blog-post-title"><?php echo esc_html($heartful_item['title']); ?></span>
 <?php if ($heartful_item['is_new']) : ?>
-<img src="https://uranai.heartf.com/swfu/d/new012_07.gif" alt="新着" title="5日以内に更新">
+<span class="blog-post-new" aria-label="5日以内に更新">NEW</span>
 <?php endif; ?>
-<br>
+</span>
+</a>
+</li>
 <?php endforeach; ?>
-</p>
+</ul>
+</section>
 <?php endforeach; ?>
+</main>
 </body>
 </html>
 HEARTFUL_WPLIST_SOURCE_20261025
 wplist_hash=$(sha256sum "$wplist_stage")
 wplist_hash=${wplist_hash%% *}
-if [[ "$wplist_hash" != "79cb85740203ae420ff44597d9951298b4d2d74624fefb2b961ef2f59ad73ca4" ]]; then
+if [[ "$wplist_hash" != "573b42ee113b94348e9f9ca00cc45b3d3346058367c0e1f8de20cf39eabc566f" ]]; then
     printf '%s\n' 'PHP payload checksum mismatch; nothing changed.' >&2
     exit 1
 fi
