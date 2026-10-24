@@ -61,3 +61,9 @@ WordPress本番デプロイはCakePHP4・CakePHP2と同じ共通IP台帳を使�
 - `[db_select pref="mcast_top"]` は `themes/test/functions.php` から `themes/test/inc/mcast-top.php` の `heartful_mcast_top()` を呼び出します。写真カードは同関数内の共通レンダラーを使用します。
 - 全店トップの「それ以外の占い師」は `themes/test/inc/other-soothsayers.php`。`mkanteishis.delflg = 0`、公開部門 `mcast.mdivision_id = 1` を条件に、テスト先生(ID5)・本日の有効出演予定・本日の表示済み先生を除外します。午前5時の営業日切替は本日の一覧と共通です。
 - 開閉はネイティブの `details/summary`、デザインは `themes/test/commons/style.css`。CSS更新時は `header.php` のバージョンも更新します。
+
+## ネットワークのブログ一覧
+
+- トップページが埋め込む `https://heartf.com/wplist.php` の設置先は `/home/heartf/heartf.com/public_html/wplist.php`。`uranai/wp-content` 外のため、WordPressテーマの通常デプロイでは更新されません。12店舗Gitの対象にも追加しません。
+- 差替え用のWordPressコードとバックアップ付きインストーラーは `maintenance/wplist/install.sh` にあります。サーバーの `heartf` ユーザーで実行し、PHP 8.4構文・ペイロード検査後、WEBROOT外へ元ファイルを退避して置き換えます。
+- 手順と検証: `maintenance/wplist/README.md`。インストーラーの隔離検証は `python3 maintenance/wplist/test_install.py`。反映後は公開一覧とHPで対象記事を確認し、Gitの統合を本番反映と混同しないでください。
